@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/app/context/Auth.context";
 import LandingPage from "@/app/pages/utils/Landing.page";
-import DashboardPage from "@/components/pages/DashboardPage";
+import Homepage from "./pages/core/Home.page";
 import { Loader2 } from "lucide-react";
 
 export default function Page() {
@@ -16,5 +16,5 @@ export default function Page() {
         );
     }
 
-    return isAuthenticated ? <DashboardPage /> : <LandingPage />;
+    return isAuthenticated ? <Homepage /> : <LandingPage />;
 }

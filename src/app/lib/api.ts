@@ -1,9 +1,17 @@
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from "axios";
-import { store } from "./store";
 import { clearUser } from "./features/user/user.slice";
 import { clearProfile } from "./features/profile/profile.slice";
 
 const BASE_URL = "http://localhost:5000/api";
+
+// ✅ No longer importing store here — injected lazily instead
+let _store: ReturnType<typeof import("./store").store.getState> extends infer S
+    ? { getState: () => S; dispatch: (action: any) => any }
+    : never;
+
+export function injectStore(store: typeof _store) {
+    _store = store;
+}
 
 const api: AxiosInstance = axios.create({
     baseURL: BASE_URL,
@@ -17,8 +25,8 @@ const api: AxiosInstance = axios.create({
 
 api.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
-        const state = store.getState();
-        const token = state.auth?.token;
+        // ✅ _store accessed at request time, not at module init
+        const token = _store?.getState()?.auth?.token;
 
         if (token && config.headers) {
             config.headers.Authorization = `Bearer ${token}`;
@@ -33,8 +41,8 @@ api.interceptors.response.use(
     (response) => response,
     (error: AxiosError) => {
         if (error.response?.status === 401) {
-            store.dispatch(clearUser());
-            store.dispatch(clearProfile());
+            _store?.dispatch(clearUser());
+            _store?.dispatch(clearProfile());
 
             if (typeof window !== "undefined") {
                 window.location.href = "/login";
