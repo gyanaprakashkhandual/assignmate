@@ -4,7 +4,8 @@
   ],
   "hints": {
     "typescript-config/consistent-casing": "off",
-    "no-inline-styles": "off"
+    "no-inline-styles": "off",
+    "axe/aria": "off"
   },
   "browserslist": [
     "defaults",
