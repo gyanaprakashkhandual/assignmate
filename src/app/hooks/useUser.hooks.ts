@@ -54,7 +54,7 @@ export const useUser = () => {
 
     const signOut = async () => {
         await dispatch(logout());
-        window.location.href = "/login";
+        window.location.href = "/auth";
     };
 
     const loginWithGoogle = () => userApi.initiateGoogleAuth();

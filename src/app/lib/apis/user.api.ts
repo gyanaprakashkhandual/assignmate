@@ -2,7 +2,7 @@ import api from "../api";
 import { IUser, UpdateUserPayload, LinkedProvider } from "../types/user.types";
 
 const AUTH_BASE = "/auth";
-const USER_BASE = "/user";
+const USER_BASE = "/auth";
 
 export const userApi = {
     getMe: async (): Promise<IUser> => {
