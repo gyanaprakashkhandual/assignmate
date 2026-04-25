@@ -14,7 +14,10 @@ export default function Subscribe() {
   };
 
   return (
-    <section id="subscribe" className="py-20 bg-white dark:bg-zinc-950 border-t border-zinc-100 dark:border-zinc-900">
+    <section
+      id="subscribe"
+      className="py-20 bg-white dark:bg-zinc-950 border-t border-zinc-100 dark:border-zinc-900"
+    >
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -25,14 +28,15 @@ export default function Subscribe() {
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-500 mb-4">
             Stay Updated
           </p>
-          <h2
-            className="text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-white mb-3"
-            style={{ fontFamily: "'Playfair Display', serif" }}
-          >
+          <h2 className="text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-white mb-3">
             Get early access & updates
           </h2>
-          <p className="text-base text-zinc-500 dark:text-zinc-400 mb-8" style={{ fontFamily: "'Lora', serif" }}>
-            Be the first to know about new features, improvements, and exclusive early-access offers.
+          <p
+            className="text-base text-zinc-500 dark:text-zinc-400 mb-8"
+            style={{ fontFamily: "'Lora', serif" }}
+          >
+            Be the first to know about new features, improvements, and exclusive
+            early-access offers.
           </p>
 
           {submitted ? (
@@ -42,10 +46,15 @@ export default function Subscribe() {
               className="flex items-center justify-center gap-2 text-zinc-700 dark:text-zinc-300"
             >
               <CheckCircle2 className="w-5 h-5 text-green-500" />
-              <span className="text-base font-medium">You're on the list! We'll be in touch soon.</span>
+              <span className="text-base font-medium">
+                You&apos;re on the list! We&apos;ll be in touch soon.
+              </span>
             </motion.div>
           ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+            >
               <input
                 type="email"
                 value={email}
@@ -63,7 +72,9 @@ export default function Subscribe() {
               </button>
             </form>
           )}
-          <p className="text-xs text-zinc-400 dark:text-zinc-600 mt-4">No spam. Unsubscribe anytime.</p>
+          <p className="text-xs text-zinc-400 dark:text-zinc-600 mt-4">
+            No spam. Unsubscribe anytime.
+          </p>
         </motion.div>
       </div>
     </section>

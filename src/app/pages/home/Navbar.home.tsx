@@ -6,9 +6,9 @@ import Link from "next/link";
 import { Menu, X, PenLine } from "lucide-react";
 
 const navLinks = [
-  { label: "Docs", href: "#docs" },
-  { label: "Features", href: "#features" },
-  { label: "How to Use", href: "#how-to-use" },
+  { label: "Docs", href: "/docs" },
+  { label: "Features", href: "/features" },
+  { label: "How to Use", href: "/how-to-use" },
 ];
 
 export default function Navbar() {
@@ -35,13 +35,10 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-lg bg-zinc-900 dark:bg-white flex items-center justify-center transition-transform group-hover:rotate-6">
+            <div className="w-8 h-8 rounded-lg bg-zinc-900 dark:bg-white flex items-center justify-center">
               <PenLine className="w-4 h-4 text-white dark:text-zinc-900" />
             </div>
-            <span
-              className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white"
-              style={{ fontFamily: "'Playfair Display', serif" }}
-            >
+            <span className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white">
               Assignmate
             </span>
           </Link>
@@ -61,13 +58,13 @@ export default function Navbar() {
 
           <div className="hidden md:flex items-center gap-3">
             <Link
-              href="#subscribe"
+              href="/subscribe"
               className="text-sm font-medium px-4 py-2 rounded-full border border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:border-zinc-900 dark:hover:border-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-all duration-200"
             >
               Subscribe
             </Link>
             <Link
-              href="/sign-in"
+              href="/auth"
               className="text-sm font-semibold px-5 py-2 rounded-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-700 dark:hover:bg-zinc-100 transition-all duration-200 shadow-sm"
             >
               Sign In

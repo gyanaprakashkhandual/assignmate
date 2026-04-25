@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { easeInOut, motion, useInView } from "framer-motion";
 import {
   ScanLine,
   Sparkles,
@@ -59,7 +59,11 @@ const containerVariants = {
 
 const cardVariants = {
   hidden: { opacity: 0, y: 28 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: easeInOut },
+  },
 };
 
 export default function Features() {
@@ -67,7 +71,10 @@ export default function Features() {
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="features" className="py-24 lg:py-32 bg-zinc-50 dark:bg-zinc-900">
+    <section
+      id="features"
+      className="py-24 lg:py-32 bg-zinc-50 dark:bg-zinc-900"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -79,14 +86,15 @@ export default function Features() {
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-500 mb-4">
             Everything You Need
           </p>
-          <h2
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-zinc-900 dark:text-white mb-5 leading-tight"
-            style={{ fontFamily: "'Playfair Display', serif" }}
-          >
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-zinc-900 dark:text-white mb-5 leading-tight">
             Built for authentic results
           </h2>
-          <p className="text-lg text-zinc-500 dark:text-zinc-400 max-w-2xl mx-auto" style={{ fontFamily: "'Lora', serif" }}>
-            Every feature is designed around one goal: output that is genuinely indistinguishable from your real handwriting.
+          <p
+            className="text-lg text-zinc-500 dark:text-zinc-400 max-w-2xl mx-auto"
+            style={{ fontFamily: "'Lora', serif" }}
+          >
+            Every feature is designed around one goal: output that is genuinely
+            indistinguishable from your real handwriting.
           </p>
         </motion.div>
 
@@ -106,10 +114,13 @@ export default function Features() {
               <div className="w-11 h-11 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-5 group-hover:bg-zinc-900 dark:group-hover:bg-white transition-colors duration-300">
                 <feature.icon className="w-5 h-5 text-zinc-600 dark:text-zinc-400 group-hover:text-white dark:group-hover:text-zinc-900 transition-colors duration-300" />
               </div>
-              <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-2.5" style={{ fontFamily: "'Playfair Display', serif" }}>
+              <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-2.5">
                 {feature.title}
               </h3>
-              <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed" style={{ fontFamily: "'Lora', serif" }}>
+              <p
+                className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed"
+                style={{ fontFamily: "'Lora', serif" }}
+              >
                 {feature.description}
               </p>
             </motion.div>

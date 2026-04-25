@@ -42,7 +42,7 @@ export default function Footer() {
               </div>
               <span
                 className="text-xl font-bold tracking-tight"
-                style={{ fontFamily: "'Playfair Display', serif" }}
+                 
               >
                 Assignmate
               </span>

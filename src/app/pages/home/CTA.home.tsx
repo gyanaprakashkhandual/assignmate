@@ -18,10 +18,24 @@ export default function CTA() {
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-zinc-800 dark:bg-zinc-100 opacity-50 blur-3xl" />
             <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-zinc-700 dark:bg-zinc-200 opacity-40 blur-3xl" />
-            <svg className="absolute inset-0 w-full h-full opacity-[0.04]" xmlns="http://www.w3.org/2000/svg">
+            <svg
+              className="absolute inset-0 w-full h-full opacity-[0.04]"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <defs>
-                <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
-                  <circle cx="2" cy="2" r="1.5" fill="white" className="dark:fill-zinc-900" />
+                <pattern
+                  id="dots"
+                  width="24"
+                  height="24"
+                  patternUnits="userSpaceOnUse"
+                >
+                  <circle
+                    cx="2"
+                    cy="2"
+                    r="1.5"
+                    fill="white"
+                    className="dark:fill-zinc-900"
+                  />
                 </pattern>
               </defs>
               <rect width="100%" height="100%" fill="url(#dots)" />
@@ -44,7 +58,6 @@ export default function CTA() {
               viewport={{ once: true }}
               transition={{ delay: 0.2, duration: 0.7 }}
               className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white dark:text-zinc-900 mb-5 leading-tight"
-              style={{ fontFamily: "'Playfair Display', serif" }}
             >
               Your handwriting.
               <br />
@@ -58,7 +71,8 @@ export default function CTA() {
               className="text-base sm:text-lg text-zinc-400 dark:text-zinc-500 max-w-lg mx-auto mb-10"
               style={{ fontFamily: "'Lora', serif" }}
             >
-              Join thousands of students and professionals who are saving hours every week with Assignmate.
+              Join thousands of students and professionals who are saving hours
+              every week with Assignmate.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 12 }}
@@ -68,14 +82,14 @@ export default function CTA() {
               className="flex flex-col sm:flex-row gap-3 justify-center"
             >
               <Link
-                href="/sign-up"
+                href="/auth"
                 className="group inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white text-sm font-semibold hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all duration-200 shadow-lg"
               >
                 Create Free Account
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
-                href="#features"
+                href="/features"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full border border-zinc-700 dark:border-zinc-300 text-zinc-300 dark:text-zinc-600 text-sm font-semibold hover:border-zinc-400 dark:hover:border-zinc-500 transition-all duration-200"
               >
                 Learn More

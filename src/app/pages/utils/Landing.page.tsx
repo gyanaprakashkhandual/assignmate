@@ -1,6 +1,5 @@
 import Navbar from "../home/Navbar.home";
 import Hero from "../home/Hero.home";
-import StatsNumbers from "../home/Stat.home";
 import Features from "../home/Features.home";
 import GettingStarted from "../home/GS.home";
 import UseCases from "../home/UseCase.home";
@@ -14,7 +13,6 @@ export default function LandingPage() {
     <main className="min-h-screen bg-white dark:bg-zinc-950">
       <Navbar />
       <Hero />
-      <StatsNumbers />
       <Features />
       <GettingStarted />
       <UseCases />
