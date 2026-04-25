@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { PenLine, ArrowLeft, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 const sections = [
   {
@@ -73,29 +73,6 @@ const tableOfContents = sections.map((s) => ({ id: s.id, title: s.title }));
 export default function TermsPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-zinc-950">
-      <header className="sticky top-0 z-40 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-7 h-7 rounded-lg bg-zinc-900 dark:bg-white flex items-center justify-center transition-transform group-hover:rotate-6">
-              <PenLine className="w-3.5 h-3.5 text-white dark:text-zinc-900" />
-            </div>
-            <span
-              className="text-sm font-bold tracking-tight text-zinc-900 dark:text-white"
-              style={{ fontFamily: "'Playfair Display', serif" }}
-            >
-              Assignmate
-            </span>
-          </Link>
-          <Link
-            href="/"
-            className="flex items-center gap-1.5 text-xs font-medium text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors group"
-          >
-            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
-            Back to Home
-          </Link>
-        </div>
-      </header>
-
       <div className="relative h-64 sm:h-80 lg:h-96 overflow-hidden">
         <Image
           src="https://res.cloudinary.com/dvytvjplt/image/upload/v1777107019/Gemini_Generated_Image_6u6xuj6u6xuj6u6x_w73jhv.png"
@@ -104,7 +81,7 @@ export default function TermsPage() {
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-zinc-900/30 via-zinc-900/40 to-white dark:to-zinc-950" />
+        <div className="absolute inset-0 bg-linear-to-b from-zinc-900/30 via-zinc-900/40 to-white dark:to-zinc-950" />
         <div className="absolute inset-0 flex flex-col items-center justify-end pb-10 px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -114,16 +91,10 @@ export default function TermsPage() {
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/70 mb-3">
               Legal
             </p>
-            <h1
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight drop-shadow-sm"
-              style={{ fontFamily: "'Playfair Display', serif" }}
-            >
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight drop-shadow-sm">
               Terms & Conditions
             </h1>
-            <p
-              className="text-sm text-white/70 mt-3"
-              style={{ fontFamily: "'Lora', serif" }}
-            >
+            <p className="text-sm text-white/70 mt-3">
               Last updated: April 25, 2026
             </p>
           </motion.div>
@@ -132,7 +103,7 @@ export default function TermsPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-20">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
-          <aside className="lg:w-64 flex-shrink-0">
+          <aside className="lg:w-64 shrink-0">
             <div className="lg:sticky lg:top-24">
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-zinc-400 dark:text-zinc-600 mb-4">
                 Contents
@@ -145,32 +116,25 @@ export default function TermsPage() {
                     className="flex items-center gap-2 py-1.5 text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors group"
                   >
                     <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -ml-1 transition-all group-hover:translate-x-0.5" />
-                    <span style={{ fontFamily: "'Lora', serif" }}>
-                      {item.title}
-                    </span>
+                    <span>{item.title}</span>
                   </a>
                 ))}
               </nav>
 
               <div className="mt-8 pt-8 border-t border-zinc-100 dark:border-zinc-900">
-                <p
-                  className="text-xs text-zinc-400 dark:text-zinc-600 mb-3"
-                  style={{ fontFamily: "'Lora', serif" }}
-                >
+                <p className="text-xs text-zinc-400 dark:text-zinc-600 mb-3">
                   Related policies
                 </p>
                 <div className="space-y-1.5">
                   <Link
-                    href="/privacy"
+                    href="/privacy-policy"
                     className="block text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
-                    style={{ fontFamily: "'Lora', serif" }}
                   >
                     Privacy Policy →
                   </Link>
                   <Link
-                    href="/cookies"
+                    href="/cookies-policy"
                     className="block text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
-                    style={{ fontFamily: "'Lora', serif" }}
                   >
                     Cookie Policy →
                   </Link>
@@ -186,10 +150,7 @@ export default function TermsPage() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="mb-10 p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800"
             >
-              <p
-                className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed"
-                style={{ fontFamily: "'Lora', serif" }}
-              >
+              <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
                 Please read these Terms and Conditions carefully before using
                 Assignmate. These Terms govern your access to and use of our
                 AI-powered handwriting generation service. By using the Service,
@@ -208,17 +169,11 @@ export default function TermsPage() {
                   transition={{ duration: 0.5, delay: i * 0.04 }}
                   className="scroll-mt-24"
                 >
-                  <h2
-                    className="text-xl sm:text-2xl font-bold text-zinc-900 dark:text-white mb-4"
-                    style={{ fontFamily: "'Playfair Display', serif" }}
-                  >
+                  <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 dark:text-white mb-4">
                     {section.title}
                   </h2>
                   <div className="h-px bg-zinc-100 dark:bg-zinc-800 mb-5" />
-                  <p
-                    className="text-base text-zinc-600 dark:text-zinc-400 leading-relaxed"
-                    style={{ fontFamily: "'Lora', serif" }}
-                  >
+                  <p className="text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
                     {section.content}
                   </p>
                 </motion.div>
@@ -226,21 +181,18 @@ export default function TermsPage() {
             </div>
 
             <div className="mt-16 pt-10 border-t border-zinc-100 dark:border-zinc-900 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <p
-                className="text-xs text-zinc-400 dark:text-zinc-600"
-                style={{ fontFamily: "'Lora', serif" }}
-              >
+              <p className="text-xs text-zinc-400 dark:text-zinc-600">
                 © {new Date().getFullYear()} Assignmate. All rights reserved.
               </p>
               <div className="flex items-center gap-4">
                 <Link
-                  href="/privacy"
+                  href="/privacy-policy"
                   className="text-xs text-zinc-400 dark:text-zinc-600 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
                 >
                   Privacy Policy
                 </Link>
                 <Link
-                  href="/cookies"
+                  href="/cookies-policy"
                   className="text-xs text-zinc-400 dark:text-zinc-600 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
                 >
                   Cookie Policy
