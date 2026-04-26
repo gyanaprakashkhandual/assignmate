@@ -10,22 +10,24 @@ import HandwritingSettings from "../components/Handwriting.setting";
 import SecuritySettings from "../components/Security.setting";
 import DangerSettings from "../components/Danger.setting";
 import { LogOut, Settings } from "lucide-react";
+import ThemeSettings from "../components/Theme.setting";
 
 export default function SettingsPage() {
     const [activeTab, setActiveTab] = useState<SettingsTab>("profile");
     const { user, signOut } = useAuth();
     const { profile } = useProfile();
-
+ 
     const displayName = profile?.nickname || profile?.username || user?.name || "User";
     const initials = displayName.charAt(0).toUpperCase();
-
+ 
     const tabContent: Record<SettingsTab, React.ReactNode> = {
         profile: <ProfileSettings />,
         handwriting: <HandwritingSettings />,
+        appearance: <ThemeSettings />,
         security: <SecuritySettings />,
         danger: <DangerSettings />,
     };
-
+ 
     return (
         <div className="min-h-screen bg-white">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
@@ -39,7 +41,7 @@ export default function SettingsPage() {
                             <p className="text-xs text-zinc-400">{user?.email}</p>
                         </div>
                     </div>
-
+ 
                     <div className="flex items-center gap-3">
                         <div className="hidden sm:flex items-center gap-2.5">
                             <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center">
@@ -58,12 +60,12 @@ export default function SettingsPage() {
                         </motion.button>
                     </div>
                 </div>
-
+ 
                 <div className="flex flex-col sm:flex-row gap-8">
                     <aside className="w-full sm:w-48 shrink-0">
                         <SettingsNav active={activeTab} onChange={setActiveTab} />
                     </aside>
-
+ 
                     <main className="flex-1 min-w-0">
                         <motion.div
                             key={activeTab}

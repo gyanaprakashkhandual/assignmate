@@ -8,7 +8,7 @@ import { SidebarProvider } from "@/ui/navigations/sidebar/Sidebar.context";
 import AuthenticatedLayout from "@/app/layouts/Authenticate.layout";
 import { TabsProvider } from "@/ui/navigations/tab/Tab.context";
 import { ToggleProvider } from "@/ui/inputs/toggle/Toogle.context";
-import { ThemeProvider } from "@/app/context/Theme.contex";
+import { ThemeProvider } from "@/app/context/Theme.context";
 import { ActionMenuProvider } from "@/ui/navigations/action/Action.menu.context";
 import { NavbarProvider } from "@/ui/navigations/navbar/Navbar.context";
 import { ListProvider } from "@/ui/data/list/List.context";
