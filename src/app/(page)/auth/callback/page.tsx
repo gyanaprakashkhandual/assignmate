@@ -9,12 +9,17 @@ import { PenLine } from "lucide-react";
 
 export default function CallbackPage() {
   const router = useRouter();
-  const { isChecked } = useAuth();
+  const { isChecked, isAuthenticated } = useAuth(); // 👈 add isAuthenticated
 
   useEffect(() => {
     if (!isChecked) return;
-    router.replace("/");
-  }, [isChecked]);
+    if (isAuthenticated) {
+      router.replace("/");      // ✅ logged in → go home
+    } else {
+      router.replace("/auth");  // ✅ auth failed → back to login
+    }
+  }, [isChecked, isAuthenticated]);
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white dark:bg-zinc-950">

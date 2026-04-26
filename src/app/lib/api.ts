@@ -50,10 +50,9 @@ api.interceptors.response.use(
                 if (typeof window !== "undefined") {
                     window.location.href = "/auth";
                 }
-            } else {
-                // Not authenticated yet — just clear state silently, no redirect
-                _store?.dispatch(clearUser());
             }
+            // ❌ REMOVE the else block entirely — don't dispatch clearUser() here
+            // fetchMe's own .rejected handler already sets isChecked: true
         }
 
         const message =
@@ -64,5 +63,4 @@ api.interceptors.response.use(
         return Promise.reject(new Error(message));
     }
 );
-
 export default api;

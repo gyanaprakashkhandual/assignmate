@@ -22,6 +22,7 @@ import {
 } from "../../../ui/navigations/sidebar/Sidebar.ui";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/context/Auth.context";
+import Recent from "@/app/modules/chat/core/Recent.chat";
 
 export { useSidebarContext, SidebarProvider };
 
@@ -63,7 +64,7 @@ export default function Sidebar({
     {
       id: "search",
       label: "Search",
-      icon: <Search size={18} />
+      icon: <Search size={18} />,
     },
     {
       id: "chats",
@@ -144,6 +145,7 @@ export default function Sidebar({
           title={title}
           header={<CustomHeader />}
           footer={<CustomFooter />}
+          bottomContent={<Recent />}
           className={className}
           innerClassName="bg-white dark:bg-gray-900"
           headerClassName="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800"

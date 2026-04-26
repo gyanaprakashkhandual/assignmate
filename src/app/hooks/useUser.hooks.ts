@@ -36,12 +36,6 @@ export const useUser = () => {
     const userName = useAppSelector(selectUserName);
     const userAvatar = useAppSelector(selectUserAvatar);
 
-    useEffect(() => {
-        if (!user) {
-            dispatch(fetchMe());
-        }
-    }, []);
-
     const refetchUser = () => dispatch(fetchMe());
 
     const update = (payload: UpdateUserPayload) => dispatch(updateMe(payload));

@@ -44,8 +44,12 @@ export default function AuthPage() {
     if (isAuthenticated) router.replace("/");
   }, [isAuthenticated, isChecked, router]);
 
-  if (!isChecked) return null;
-  if (isAuthenticated) return null;
+  if (!isChecked) return (
+    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-zinc-950">
+        <div className="w-5 h-5 rounded-full border-2 border-zinc-300 border-t-zinc-900 animate-spin" />
+    </div>
+);
+if (isAuthenticated) return null;
 
   return (
     <div className="min-h-screen bg-white dark:bg-zinc-950 flex">
