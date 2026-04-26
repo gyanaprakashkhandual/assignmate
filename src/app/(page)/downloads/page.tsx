@@ -1,9 +1,12 @@
-import React from 'react'
-
-function page() {
-  return (
-    <div>page</div>
-  )
+export const metadata = {
+  title: "Downloads",
+  description: "Download history page"
 }
 
-export default page
+export default function Page () {
+  return (
+    <div>
+      page
+    </div>
+  )
+}

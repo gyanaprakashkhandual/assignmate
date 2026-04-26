@@ -1,9 +1,12 @@
-import React from 'react'
+export const metadata = {
+  title: "Chats",
+  description: "Chat page",
+};
 
-function page() {
+export default function page() {
   return (
-    <div>page</div>
-  )
+    <div>
+      page
+    </div>
+  );
 }
-
-export default page

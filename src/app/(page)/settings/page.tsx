@@ -1,12 +1,14 @@
-import SettingsPage from '@/app/modules/settings/pages/Setting.page'
-import React from 'react'
+import SettingsPage from "@/app/modules/settings/pages/Setting.page";
 
-function page() {
+export const metadata = {
+  title: "Settings",
+  description: "Setting page",
+};
+
+export default function Page() {
   return (
     <div>
-        <SettingsPage/>
+      <SettingsPage />
     </div>
-  )
+  );
 }
-
-export default page

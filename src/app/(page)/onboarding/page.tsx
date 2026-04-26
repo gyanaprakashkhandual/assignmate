@@ -1,12 +1,13 @@
-import OnboardingPage from '@/app/modules/onboard/pages/Onboarding.page'
-import React from 'react'
+import OnboardingPage from "@/app/modules/onboard/pages/Onboarding.page";
 
-function page() {
+export const metadata = {
+  title: "onboarding",
+  description: "Onboarding page",
+};
+export default function Page() {
   return (
     <div>
-        <OnboardingPage/>
+      <OnboardingPage />
     </div>
-  )
+  );
 }
-
-export default page
