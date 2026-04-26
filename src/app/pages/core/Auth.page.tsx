@@ -35,16 +35,17 @@ const GithubIcon = () => (
 );
 
 export default function AuthPage() {
-  const { isAuthenticated, isChecked, loginWithGoogle, loginWithGithub } = useAuth();
+  const { isAuthenticated, isChecked, loginWithGoogle, loginWithGithub } =
+    useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isChecked) return;          // ← wait for check to complete
+    if (!isChecked) return;
     if (isAuthenticated) router.replace("/");
   }, [isAuthenticated, isChecked, router]);
 
-  if (!isChecked) return null;       // ← don't render while unknown
-  if (isAuthenticated) return null;  // ← don't flash login UI if authed
+  if (!isChecked) return null;
+  if (isAuthenticated) return null;
 
   return (
     <div className="min-h-screen bg-white dark:bg-zinc-950 flex">
