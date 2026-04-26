@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import {
@@ -8,7 +9,11 @@ import {
   ReactNode,
 } from "react";
 import { useAppSelector } from "@/app/lib/hooks";
-import { selectHasProfile } from "@/app/lib/features/profile/profile.selector";
+import {
+  selectHasProfile,
+  selectProfileFetched,
+  selectProfileLoading,
+} from "@/app/lib/features/profile/profile.selector";
 import {
   selectIsAuthenticated,
   selectIsChecked,
@@ -29,16 +34,18 @@ export function OnboardProvider({ children }: { children: ReactNode }) {
   const [isOnboarded, setIsOnboarded] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
 
+  const isProfileFetched = useAppSelector(selectProfileFetched);
+
   useEffect(() => {
     if (!isChecked) return;
     if (!isAuthenticated) {
       setIsChecking(false);
       return;
     }
+    if (!isProfileFetched) return;
     setIsOnboarded(hasProfile);
     setIsChecking(false);
-  }, [isChecked, isAuthenticated, hasProfile]);
-
+  }, [isChecked, isAuthenticated, hasProfile, isProfileFetched]);
   const markOnboarded = () => setIsOnboarded(true);
 
   return (

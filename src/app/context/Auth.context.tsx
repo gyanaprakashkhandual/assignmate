@@ -1,9 +1,12 @@
 "use client";
 
-import { createContext, useContext, useEffect, ReactNode, useRef } from "react";
+import { createContext, useContext, useEffect, ReactNode } from "react";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { fetchMe, logout, clearUser } from "@/app/lib/features/user/user.slice";
-import { clearProfile } from "@/app/lib/features/profile/profile.slice";
+import {
+  clearProfile,
+  fetchMyProfile,
+} from "@/app/lib/features/profile/profile.slice";
 import {
   selectUser,
   selectIsAuthenticated,
@@ -32,13 +35,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isLoading = useAppSelector(selectAuthLoading);
   const isChecked = useAppSelector(selectIsChecked);
 
-  const fetchAttempted = useRef(false);
+  useEffect(() => {
+    if (!isChecked) {
+      dispatch(fetchMe());
+    }
+  }, [dispatch, isChecked]);
 
-useEffect(() => {
-  if (!isChecked) {
-    dispatch(fetchMe());
-  }
-}, [dispatch, isChecked]);
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(fetchMyProfile());
+    }
+  }, [isAuthenticated]);
 
   const loginWithGoogle = () => userApi.initiateGoogleAuth();
   const loginWithGithub = () => userApi.initiateGithubAuth();

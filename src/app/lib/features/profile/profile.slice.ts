@@ -5,6 +5,7 @@ import { ProfileState, IProfile, CreateProfilePayload, UpdateProfilePayload, IHa
 const initialState: ProfileState = {
     profile: null,
     isLoading: false,
+    isFetched: false,
     error: null,
 };
 
@@ -81,6 +82,7 @@ const profileSlice = createSlice({
         clearProfile(state) {
             state.profile = null;
             state.error = null;
+            state.isFetched = false;
         },
         clearProfileError(state) {
             state.error = null;
@@ -94,13 +96,14 @@ const profileSlice = createSlice({
             })
             .addCase(fetchMyProfile.fulfilled, (state, action) => {
                 state.isLoading = false;
+                state.isFetched = true;
                 state.profile = action.payload;
             })
             .addCase(fetchMyProfile.rejected, (state, action) => {
                 state.isLoading = false;
+                state.isFetched = true;
                 state.error = action.payload ?? "Failed to fetch profile";
             })
-
             .addCase(createProfile.pending, (state) => {
                 state.isLoading = true;
                 state.error = null;
@@ -113,7 +116,6 @@ const profileSlice = createSlice({
                 state.isLoading = false;
                 state.error = action.payload ?? "Failed to create profile";
             })
-
             .addCase(updateProfile.pending, (state) => {
                 state.isLoading = true;
                 state.error = null;
@@ -126,7 +128,6 @@ const profileSlice = createSlice({
                 state.isLoading = false;
                 state.error = action.payload ?? "Failed to update profile";
             })
-
             .addCase(deleteProfile.fulfilled, (state) => {
                 state.profile = null;
                 state.isLoading = false;
@@ -134,7 +135,6 @@ const profileSlice = createSlice({
             .addCase(deleteProfile.rejected, (state, action) => {
                 state.error = action.payload ?? "Failed to delete profile";
             })
-
             .addCase(uploadHandwritingImage.pending, (state) => {
                 state.isLoading = true;
                 state.error = null;
@@ -149,7 +149,6 @@ const profileSlice = createSlice({
                 state.isLoading = false;
                 state.error = action.payload ?? "Failed to upload handwriting image";
             })
-
             .addCase(deleteHandwritingImage.fulfilled, (state) => {
                 if (state.profile) {
                     state.profile.handwritingImage = undefined;

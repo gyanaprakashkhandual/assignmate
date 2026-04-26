@@ -39,4 +39,5 @@ export interface ProfileState {
     profile: IProfile | null;
     isLoading: boolean;
     error: string | null;
+    isFetched: boolean;
 }

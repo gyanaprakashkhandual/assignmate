@@ -5,32 +5,35 @@ import { useAuth } from "../context/Auth.context";
 import { usePathname } from "next/navigation";
 import { useOnboard } from "../context/Onboard.context";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isChecked } = useAuth();
+  const { isOnboarded, isChecking } = useOnboard();
   const pathname = usePathname();
   const router = useRouter();
 
-  // Never wrap auth-related pages with the sidebar layout
   const isAuthRoute = pathname.startsWith("/auth");
-  if (isAuthRoute) {
+  const isOnboardingRoute = pathname.startsWith("/onboarding");
+
+  // ✅ useEffect BEFORE any early returns
+  useEffect(() => {
+    if (isChecked && !isChecking && isAuthenticated && !isOnboarded && !isOnboardingRoute) {
+      router.replace("/onboarding");
+    }
+  }, [isChecked, isChecking, isAuthenticated, isOnboarded, isOnboardingRoute]);
+
+  if (isAuthRoute || isOnboardingRoute) {
     return <>{children}</>;
   }
 
-  if (!isChecked) {
+  if (!isChecked || isChecking) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-gray-900 dark:text-white animate-spin" />
       </div>
     );
   }
-  // In AuthenticatedLayout, after the isChecked check:
-const { isOnboarded } = useOnboard();
-
-if (isAuthenticated && !isOnboarded && !pathname.startsWith("/onboarding")) {
-  router.replace("/onboarding");
-  return null;
-}
 
   if (!isAuthenticated) {
     return <>{children}</>;
