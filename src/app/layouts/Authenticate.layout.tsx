@@ -3,10 +3,13 @@ import { Loader2 } from "lucide-react";
 import Sidebar from "../components/core/Sidebar";
 import { useAuth } from "../context/Auth.context";
 import { usePathname } from "next/navigation";
+import { useOnboard } from "../context/Onboard.context";
+import { useRouter } from "next/navigation";
 
 export default function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isChecked } = useAuth();
   const pathname = usePathname();
+  const router = useRouter();
 
   // Never wrap auth-related pages with the sidebar layout
   const isAuthRoute = pathname.startsWith("/auth");
@@ -21,6 +24,13 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
       </div>
     );
   }
+  // In AuthenticatedLayout, after the isChecked check:
+const { isOnboarded } = useOnboard();
+
+if (isAuthenticated && !isOnboarded && !pathname.startsWith("/onboarding")) {
+  router.replace("/onboarding");
+  return null;
+}
 
   if (!isAuthenticated) {
     return <>{children}</>;

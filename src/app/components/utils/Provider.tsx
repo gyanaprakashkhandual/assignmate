@@ -22,6 +22,7 @@ import { WindowProvider } from "@/ui/overlay/window/Window.context";
 
 import { AlertProvider } from "@/ui/feedback/alert/Alert.context";
 import { SnackbarProvider } from "@/ui/feedback/snackbar/Snackbar.context";
+import { OnboardProvider } from "@/app/context/Onboard.context";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -42,6 +43,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
                                 <ButtonProvider>
                                   <InputProvider>
                                     <CardProvider>
+                                      <OnboardProvider>
                                       <AuthProvider>
                                         <ThemeProvider>
                                           <AuthenticatedLayout>
@@ -49,6 +51,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
                                           </AuthenticatedLayout>
                                         </ThemeProvider>
                                       </AuthProvider>
+                                      </OnboardProvider>
                                     </CardProvider>
                                   </InputProvider>
                                 </ButtonProvider>
