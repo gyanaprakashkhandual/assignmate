@@ -1,14 +1,15 @@
+/* eslint-disable react-hooks/static-components */
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import React from "react";
 import {
-  Home,
   Plus,
   Search,
   MessageCircle,
   Download,
   Settings,
   Monitor,
+  User2,
 } from "lucide-react";
 import {
   SidebarProvider,
@@ -20,7 +21,7 @@ import {
   type SidebarPosition,
 } from "../../../ui/navigations/sidebar/Sidebar.ui";
 import { useRouter } from "next/navigation";
-import { useProfile } from "@/app/hooks/useProfile.hooks";
+import { useAuth } from "@/app/context/Auth.context";
 
 export { useSidebarContext, SidebarProvider };
 
@@ -50,34 +51,25 @@ export default function Sidebar({
   className?: string;
 }) {
   const router = useRouter();
-  const { nickname, username } = useProfile();
-
-  const displayName = nickname || username || "User";
+  const { user } = useAuth();
 
   const sidebarItems: SidebarItem[] = [
-    {
-      id: "home",
-      label: "Home",
-      icon: <Home size={18} />,
-      onClick: () => router.push("/"),
-    },
     {
       id: "new-chat",
       label: "New Chat",
       icon: <Plus size={18} />,
-      onClick: () => router.push("/chat/new"),
+      onClick: () => router.push("/chat"),
     },
     {
       id: "search",
       label: "Search",
-      icon: <Search size={18} />,
-      onClick: () => router.push("/search"),
+      icon: <Search size={18} />
     },
     {
       id: "chats",
       label: "Chats",
       icon: <MessageCircle size={18} />,
-      onClick: () => router.push("/chats"),
+      onClick: () => router.push("/history"),
     },
     {
       id: "downloads",
@@ -95,14 +87,24 @@ export default function Sidebar({
 
   const CustomHeader = () => (
     <div className="flex items-center gap-3">
-      <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center shrink-0">
-        <span className="text-white font-bold text-sm">
-          {displayName.charAt(0).toUpperCase()}
+      <div className="w-8 h-8 flex items-center justify-center shrink-0">
+        <span>
+          {user?.avatar ? (
+            <img
+              src={user.avatar}
+              alt={user.name}
+              className="w-6 h-6 rounded-full object-cover shrink-0"
+            />
+          ) : (
+            <div className="w-6 h-6 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center shrink-0">
+              <User2 className="w-3 h-3 text-zinc-500" />
+            </div>
+          )}
         </span>
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
-          {displayName}
+        <p className="text-sm font-semibold text-gray-900 dark:text-white truncate line-clamp-1">
+          {user?.name}
         </p>
       </div>
     </div>
