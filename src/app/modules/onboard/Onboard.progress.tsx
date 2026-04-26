@@ -12,7 +12,9 @@ export default function OnboardProgress({ current, total }: Props) {
         <div
           key={i}
           className={`h-1 rounded-full transition-all duration-500 ${
-            i < current ? "bg-black" : "bg-zinc-200"
+            i < current
+              ? "bg-black dark:bg-white"
+              : "bg-zinc-200 dark:bg-zinc-700"
           } ${i === current - 1 ? "w-8" : "w-4"}`}
         />
       ))}
