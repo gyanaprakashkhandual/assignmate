@@ -1,23 +1,15 @@
-/* eslint-disable react-hooks/static-components */
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import {
   Home,
-  MapPin,
-  Moon,
-  Sun,
-  Settings,
-  LogOut,
-  Bell,
-  Calendar,
-  User2,
-  Download,
-  Check,
-  History,
+  Plus,
+  Search,
   MessageCircle,
+  Download,
+  Settings,
+  Monitor,
 } from "lucide-react";
-import { useProfile } from "@/app/hooks/useProfile";
 import {
   SidebarProvider,
   useSidebarContext,
@@ -28,11 +20,7 @@ import {
   type SidebarPosition,
 } from "../../../ui/navigations/sidebar/Sidebar.ui";
 import { useRouter } from "next/navigation";
-import { Tooltip } from "@/ui/data/tooltip/Tooltip.ui";
-import { BsSpotify } from "react-icons/bs";
-import { TiWeatherCloudy } from "react-icons/ti";
-import MoodOrb from "../widget/Sidebar.widget";
-import { GoReport } from "react-icons/go";
+import { useProfile } from "@/app/hooks/useProfile.hooks";
 
 export { useSidebarContext, SidebarProvider };
 
@@ -43,7 +31,7 @@ export default function Sidebar({
   sticky = true,
   showToggle = true,
   showHamburger = true,
-  title = "Dashboard",
+  title = "Assignmate",
   defaultMode = "expanded",
   persistToStorage = true,
   enableKeyboardShortcut = true,
@@ -53,7 +41,6 @@ export default function Sidebar({
   variant?: SidebarVariant;
   position?: SidebarPosition;
   sticky?: boolean;
-  showSearch?: boolean;
   showToggle?: boolean;
   showHamburger?: boolean;
   title?: string;
@@ -62,124 +49,60 @@ export default function Sidebar({
   enableKeyboardShortcut?: boolean;
   className?: string;
 }) {
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const router = useRouter();
-  const { profile } = useProfile();
+  const { nickname, username } = useProfile();
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    if (!isDarkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
+  const displayName = nickname || username || "User";
 
   const sidebarItems: SidebarItem[] = [
     {
-      id: "nudge",
-      label: "Nudge",
+      id: "home",
+      label: "Home",
+      icon: <Home size={18} />,
+      onClick: () => router.push("/"),
+    },
+    {
+      id: "new-chat",
+      label: "New Chat",
+      icon: <Plus size={18} />,
+      onClick: () => router.push("/chat/new"),
+    },
+    {
+      id: "search",
+      label: "Search",
+      icon: <Search size={18} />,
+      onClick: () => router.push("/search"),
+    },
+    {
+      id: "chats",
+      label: "Chats",
       icon: <MessageCircle size={18} />,
-      onClick: () => {
-        router.push("/");
-      },
+      onClick: () => router.push("/chats"),
     },
     {
-      id: "mood",
-      label: "Mood",
-      icon: <Moon size={18} />,
-      onClick: () => {
-        router.push("/mood");
-      },
-    },
-    {
-      id: "todo",
-      label: "TODO",
-      icon: <Check size={18} />,
-      onClick: () => {
-        router.push("/todo");
-      },
-    },
-    {
-      id: "calendar",
-      label: "Calendar",
-      icon: <Calendar size={18} />,
-      onClick: () => {
-        router.push("/calendar");
-      },
-    },
-    {
-      id: "spotify",
-      label: "Spotify",
-      icon: <BsSpotify size={18} />,
-      onClick: () => {
-        router.push("/spotify");
-      },
-    },
-    {
-      id: "locations",
-      label: "Locations",
-      icon: <MapPin size={18} />,
-      onClick: () => {
-        router.push("/locations");
-      },
-    },
-    {
-      id: "reports",
-      label: "Reports",
-      icon: <GoReport size={18} />,
-      onClick: () => {
-        router.push("/reports");
-      },
-    },
-    {
-      id: "notifications",
-      label: "Notifications",
-      icon: <Bell size={18} />,
-      onClick: () => {
-        router.push("/notifications");
-      },
-    },
-    {
-      id: "history",
-      label: "History",
-      icon: <History size={18} />,
-      onClick: () => {
-        router.push("/history");
-      },
+      id: "downloads",
+      label: "Downloads",
+      icon: <Download size={18} />,
+      onClick: () => router.push("/downloads"),
     },
     {
       id: "settings",
       label: "Settings",
       icon: <Settings size={18} />,
-      onClick: () => {
-        router.push("/settings");
-      },
-    },
-    {
-      id: "profile",
-      label: "Profile",
-      icon: <User2 size={18} />,
-      onClick: () => {
-        if (profile?.username) {
-          router.push(`/${profile.username}`);
-        }
-      },
+      onClick: () => router.push("/settings"),
     },
   ];
- const MoodOrbWidget = () => <MoodOrb />;
+
   const CustomHeader = () => (
     <div className="flex items-center gap-3">
       <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center shrink-0">
-        <Tooltip content={profile?.fullName}>
-          <span className="text-white font-bold text-sm">
-            {profile?.fullName?.charAt(0) || "U"}
-          </span>
-        </Tooltip>
+        <span className="text-white font-bold text-sm">
+          {displayName.charAt(0).toUpperCase()}
+        </span>
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
-          {profile?.fullName || "User Name"}
+          {displayName}
         </p>
       </div>
     </div>
@@ -187,16 +110,19 @@ export default function Sidebar({
 
   const CustomFooter = () => (
     <div className="space-y-2">
-      <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-400 bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-100">
-        <Download size={16} />
-        <span className="text-sm">Install Mobile App</span>
+      <button
+        onClick={() => router.push("/download/desktop")}
+        className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-100"
+      >
+        <Monitor size={16} />
+        <span className="text-sm">Install Desktop Version</span>
       </button>
     </div>
   );
 
   return (
     <SidebarProvider
-      defaultActiveItem="dashboard"
+      defaultActiveItem="home"
       defaultMode={defaultMode}
       size={size}
       variant={variant}
@@ -214,7 +140,6 @@ export default function Sidebar({
           showToggle={showToggle}
           showHamburger={showHamburger}
           title={title}
-          moodWidget={<MoodOrbWidget />}
           header={<CustomHeader />}
           footer={<CustomFooter />}
           className={className}

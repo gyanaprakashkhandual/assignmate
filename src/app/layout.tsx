@@ -1,4 +1,3 @@
-// src/app/layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -11,16 +10,16 @@ export const metadata: Metadata = {
     title: "Assignmate - Your Assignment mate",
     description: "This is a web application which is going to do your assignment",
     icons: {
-    icon: "/favicon.svg",
-    apple: "/apple-touch-icon.png",
-  },
+        icon: "/favicon.svg",
+        apple: "/apple-touch-icon.png",
+    },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
             <body className="min-h-full flex flex-col">
-                <Providers>{children}</Providers> {/* ✅ Redux + Auth together */}
+                <Providers>{children}</Providers>
             </body>
         </html>
     );

@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 
 const selectAuthState = (state: RootState) => state.auth;
 
+export const selectIsChecked = (state: any) => state.auth.isChecked;
 export const selectUser = createSelector(selectAuthState, (auth) => auth.user);
 export const selectIsAuthenticated = createSelector(selectAuthState, (auth) => auth.isAuthenticated);
 export const selectAuthLoading = createSelector(selectAuthState, (auth) => auth.isLoading);

@@ -1,29 +1,22 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAppDispatch } from "@/app/lib/hooks";
-import { fetchMe } from "@/app/lib/features/user/user.slice";
-import { fetchMyProfile } from "@/app/lib/features/profile/profile.slice";
 import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useAuth } from "@/app/context/Auth.context";
 
 export default function CallbackPage() {
-  const dispatch = useAppDispatch();
   const router = useRouter();
+  const { isAuthenticated, isChecked } = useAuth();
 
   useEffect(() => {
-    const init = async () => {
-      const result = await dispatch(fetchMe());
-      if (fetchMe.fulfilled.match(result)) {
-        await dispatch(fetchMyProfile());
-        router.replace("/");
-      } else {
-        router.replace("/auth");
-      }
-    };
-    init();
-  }, [dispatch, router]);
+    if (!isChecked) return;
+
+    // Always go to "/" — let the root page decide landing vs home
+    router.replace("/");
+  }, [isChecked]);  // ← removed isAuthenticated dependency entirely
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white dark:bg-zinc-950 gap-6">

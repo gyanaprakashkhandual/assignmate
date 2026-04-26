@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from "axios";
 import { clearUser } from "./features/user/user.slice";
 import { clearProfile } from "./features/profile/profile.slice";
@@ -41,11 +42,18 @@ api.interceptors.response.use(
     (response) => response,
     (error: AxiosError) => {
         if (error.response?.status === 401) {
-            _store?.dispatch(clearUser());
-            _store?.dispatch(clearProfile());
+            const wasAuthenticated = _store?.getState()?.auth?.isAuthenticated;
 
-            if (typeof window !== "undefined") {
-                window.location.href = "/auth";
+            if (wasAuthenticated) {
+                _store?.dispatch(clearUser());
+                _store?.dispatch(clearProfile());
+
+                if (typeof window !== "undefined") {
+                    window.location.href = "/auth";
+                }
+            } else {
+                // Not authenticated yet — just clear state silently, no redirect
+                _store?.dispatch(clearUser());
             }
         }
 

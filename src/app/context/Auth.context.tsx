@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, ReactNode } from "react";
+import { createContext, useContext, useEffect, ReactNode, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { fetchMe, logout, clearUser } from "@/app/lib/features/user/user.slice";
 import { clearProfile } from "@/app/lib/features/profile/profile.slice";
@@ -8,6 +8,7 @@ import {
   selectUser,
   selectIsAuthenticated,
   selectAuthLoading,
+  selectIsChecked,
 } from "@/app/lib/features/user/user.selector";
 import { userApi } from "@/app/lib/apis/user.api";
 import { IUser } from "@/app/lib/types/user.types";
@@ -16,6 +17,7 @@ interface AuthContextValue {
   user: IUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isChecked: boolean;
   loginWithGoogle: () => void;
   loginWithGithub: () => void;
   signOut: () => Promise<void>;
@@ -28,10 +30,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const user = useAppSelector(selectUser);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const isLoading = useAppSelector(selectAuthLoading);
+  const isChecked = useAppSelector(selectIsChecked);
 
-  useEffect(() => {
+  const fetchAttempted = useRef(false);
+
+useEffect(() => {
+  if (!isChecked) {
     dispatch(fetchMe());
-  }, [dispatch]);
+  }
+}, [dispatch, isChecked]);
 
   const loginWithGoogle = () => userApi.initiateGoogleAuth();
   const loginWithGithub = () => userApi.initiateGithubAuth();
@@ -49,6 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         isAuthenticated,
         isLoading,
+        isChecked,
         loginWithGoogle,
         loginWithGithub,
         signOut,

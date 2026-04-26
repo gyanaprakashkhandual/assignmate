@@ -7,6 +7,7 @@ const initialState: AuthState = {
     providers: [],
     isAuthenticated: false,
     isLoading: false,
+    isChecked: false,
     error: null,
 };
 
@@ -89,12 +90,14 @@ const userSlice = createSlice({
             state.user = action.payload;
             state.isAuthenticated = true;
             state.error = null;
+            state.isChecked = true;
         },
         clearUser(state) {
             state.user = null;
             state.providers = [];
             state.isAuthenticated = false;
             state.error = null;
+            state.isChecked = true;
         },
         clearError(state) {
             state.error = null;
@@ -110,11 +113,13 @@ const userSlice = createSlice({
                 state.isLoading = false;
                 state.user = action.payload;
                 state.isAuthenticated = true;
+                state.isChecked = true;
             })
             .addCase(fetchMe.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isAuthenticated = false;
                 state.user = null;
+                state.isChecked = true;
                 state.error = action.payload ?? "Failed to fetch user";
             })
 
@@ -135,6 +140,7 @@ const userSlice = createSlice({
                 state.user = null;
                 state.providers = [];
                 state.isAuthenticated = false;
+                state.isChecked = true;
             })
             .addCase(deleteMe.rejected, (state, action) => {
                 state.error = action.payload ?? "Failed to delete account";
@@ -156,6 +162,7 @@ const userSlice = createSlice({
                 state.providers = [];
                 state.isAuthenticated = false;
                 state.error = null;
+                state.isChecked = true;
             });
     },
 });
