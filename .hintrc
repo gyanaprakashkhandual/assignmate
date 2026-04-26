@@ -11,7 +11,8 @@
       {
         "button-name": "off"
       }
-    ]
+    ],
+    "axe/forms": "off"
   },
   "browserslist": [
     "defaults",

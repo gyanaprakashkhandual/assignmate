@@ -52,7 +52,7 @@ export const useProfile = (autoFetch = true) => {
 
     const remove = () => dispatch(deleteProfile());
 
-    const uploadImage = (file: File) => dispatch(uploadHandwritingImage(file));
+    const uploadImage = (file: File, secure_url: any) => dispatch(uploadHandwritingImage(file));
 
     const removeImage = () => dispatch(deleteHandwritingImage());
 
