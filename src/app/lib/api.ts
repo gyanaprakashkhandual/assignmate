@@ -5,7 +5,6 @@ import { clearProfile } from "./features/profile/profile.slice";
 
 const BASE_URL = "http://localhost:5000/api";
 
-// ✅ No longer importing store here — injected lazily instead
 let _store: ReturnType<typeof import("./store").store.getState> extends infer S
     ? { getState: () => S; dispatch: (action: any) => any }
     : never;

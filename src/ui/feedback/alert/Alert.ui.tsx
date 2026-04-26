@@ -7,7 +7,6 @@ import {
 } from "./Alert.context";
 import { CheckCircle, XCircle, AlertCircle, Info, X } from "lucide-react";
 
-
 interface AlertItemProps {
   alert: AlertConfig;
   onClose: () => void;
@@ -96,7 +95,6 @@ const AlertItem: React.FC<AlertItemProps> = ({ alert, onClose }) => {
           hover:shadow-xl
         `}
       >
-
         <div className="p-4 flex gap-3 items-start">
           <div className={`shrink-0 ${config.iconColor} mt-0.5`}>
             {alert.icon || config.icon}

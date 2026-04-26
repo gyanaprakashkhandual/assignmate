@@ -1,6 +1,4 @@
-/* eslint-disable react-refresh/only-export-components */
 "use client";
-
 import React, {
   createContext,
   useContext,

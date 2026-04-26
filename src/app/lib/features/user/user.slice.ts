@@ -9,6 +9,7 @@ const initialState: AuthState = {
     isLoading: false,
     isChecked: false,
     error: null,
+    token: undefined
 };
 
 export const fetchMe = createAsyncThunk<IUser, void, { rejectValue: string }>(

@@ -1,4 +1,5 @@
-'use client'
+/* eslint-disable react-hooks/exhaustive-deps */
+"use client";
 import { Loader2 } from "lucide-react";
 import Sidebar from "../components/core/Sidebar";
 import { useAuth } from "../context/Auth.context";
@@ -7,7 +8,11 @@ import { useOnboard } from "../context/Onboard.context";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export default function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
+export default function AuthenticatedLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { isAuthenticated, isChecked } = useAuth();
   const { isOnboarded, isChecking } = useOnboard();
   const pathname = usePathname();
@@ -16,9 +21,14 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
   const isAuthRoute = pathname.startsWith("/auth");
   const isOnboardingRoute = pathname.startsWith("/onboarding");
 
-  // ✅ useEffect BEFORE any early returns
   useEffect(() => {
-    if (isChecked && !isChecking && isAuthenticated && !isOnboarded && !isOnboardingRoute) {
+    if (
+      isChecked &&
+      !isChecking &&
+      isAuthenticated &&
+      !isOnboarded &&
+      !isOnboardingRoute
+    ) {
       router.replace("/onboarding");
     }
   }, [isChecked, isChecking, isAuthenticated, isOnboarded, isOnboardingRoute]);

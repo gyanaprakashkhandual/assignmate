@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./features/user/user.slice";
 import profileReducer from "./features/profile/profile.slice";
-import { injectStore } from "./api"; // ✅ safe — api.ts no longer imports store.ts
+import { injectStore } from "./api";
 
 export const store = configureStore({
     reducer: {
@@ -20,7 +20,7 @@ export const store = configureStore({
     devTools: process.env.NODE_ENV !== "production",
 });
 
-injectStore(store); // ✅ breaks the circular reference
+injectStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

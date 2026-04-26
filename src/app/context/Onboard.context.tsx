@@ -12,7 +12,6 @@ import { useAppSelector } from "@/app/lib/hooks";
 import {
   selectHasProfile,
   selectProfileFetched,
-  selectProfileLoading,
 } from "@/app/lib/features/profile/profile.selector";
 import {
   selectIsAuthenticated,
