@@ -23,6 +23,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/context/Auth.context";
 import Recent from "@/app/modules/chat/core/Recent.chat";
+import { FaEnvelopeOpenText } from "react-icons/fa6";
 
 export { useSidebarContext, SidebarProvider };
 
@@ -77,6 +78,12 @@ export default function Sidebar({
       label: "Downloads",
       icon: <Download size={18} />,
       onClick: () => router.push("/downloads"),
+    },
+    {
+      id: "calligrapher",
+      label: "Calligrapher",
+      icon: <FaEnvelopeOpenText size={18} />,
+      onClick: () => router.push("/calligrapher"),
     },
     {
       id: "settings",

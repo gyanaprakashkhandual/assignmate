@@ -55,35 +55,8 @@ export default function CalligraphrPage() {
 
     return (
         <div className="min-h-screen bg-white dark:bg-black">
-            {/* Top nav bar */}
-            <header className="fixed top-0 left-0 right-0 z-50 border-b border-gray-100 dark:border-gray-900 bg-white/80 dark:bg-black/80 backdrop-blur-md">
-                <div className="max-w-2xl mx-auto px-6 h-14 flex items-center justify-between">
-                    {/* Logo */}
-                    <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-lg bg-black dark:bg-white flex items-center justify-center">
-                            <PenLine size={14} className="text-white dark:text-black" />
-                        </div>
-                        <span className="text-sm font-semibold text-black dark:text-white tracking-tight">
-                            Assignmate
-                        </span>
-                        <span className="text-gray-300 dark:text-gray-700 mx-1">/</span>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">
-                            Handwriting Setup
-                        </span>
-                    </div>
-
-                    {/* Close */}
-                    <button
-                        onClick={() => router.back()}
-                        className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-900 transition"
-                    >
-                        <X size={16} />
-                    </button>
-                </div>
-            </header>
-
             {/* Main content */}
-            <main className="max-w-2xl mx-auto px-6 pt-28 pb-20">
+            <main className="max-w-2xl mx-auto px-6 pt-6 pb-6">
                 {/* Step indicator */}
                 <div className="mb-12">
                     <StepIndicator currentStep={currentStep} />
