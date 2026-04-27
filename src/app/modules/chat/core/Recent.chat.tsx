@@ -11,9 +11,7 @@ import {
   Trash2,
   Trash,
   MoreHorizontal,
-  Clock,
   FileText,
-  RefreshCw,
   PenLine,
   Check,
   X,
@@ -103,9 +101,9 @@ function SessionCard({
             : "hover:bg-gray-50 dark:hover:bg-gray-800/60"
         }`}
       >
-        <div className="flex items-start gap-2.5 min-w-0">
+        <div className="flex items-center gap-2.5 min-w-0">
           <div
-            className={`mt-0.5 shrink-0 ${isActive ? "text-gray-900 dark:text-white" : "text-gray-400 dark:text-gray-500"}`}
+            className={`shrink-0 ${isActive ? "text-gray-900 dark:text-white" : "text-gray-400 dark:text-gray-500"}`}
           >
             {session.pdfUrl ? (
               <FileText size={14} />
@@ -113,36 +111,44 @@ function SessionCard({
               <MessageSquare size={14} />
             )}
           </div>
-          <div className="flex-1 min-w-0 pr-6">
-            <Tooltip content={session.title}>
-            <p
-              className={`text-[13px] leading-snug truncate font-medium ${
-                isActive
-                  ? "text-gray-900 dark:text-white"
-                  : "text-gray-700 dark:text-gray-300"
-              }`}
-            >
-              {session.title}
-            </p>
+
+          <div className="flex-1 min-w-0">
+            <Tooltip content={session.title} showCopy position="right">
+              <p
+                className={`text-[13px] leading-snug truncate font-medium ${
+                  isActive
+                    ? "text-gray-900 dark:text-white"
+                    : "text-gray-700 dark:text-gray-300"
+                }`}
+              >
+                {session.title}
+              </p>
             </Tooltip>
+          </div>
+
+          {session.isStarred && (
+            <Star
+              size={10}
+              className="shrink-0 text-amber-400 fill-amber-400"
+            />
+          )}
+
+          <div className="shrink-0" onClick={(e) => e.stopPropagation()}>
+            <ActionMenu
+              items={menuItems}
+              size="sm"
+              align="bottom-right"
+              trigger={
+                <IconTrigger
+                  size="sm"
+                  variant="ghost"
+                  icon={<MoreHorizontal size={14} />}
+                />
+              }
+            />
           </div>
         </div>
       </button>
-
-      <div className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-100">
-        <ActionMenu
-          items={menuItems}
-          size="sm"
-          align="auto"
-          trigger={
-            <IconTrigger
-              size="sm"
-              variant="ghost"
-              icon={<MoreHorizontal size={14} />}
-            />
-          }
-        />
-      </div>
     </motion.div>
   );
 }
@@ -294,7 +300,7 @@ export default function Recent() {
 
   return (
     <div className="flex flex-col w-full min-h-[50vh] max-h-[50vh]">
-      <div className="px-3 pt-3 pb-1 shrink-0">
+      <div className="shrink-0">
         <div className="flex items-center gap-1 p-0.5 bg-gray-100 dark:bg-gray-800 rounded-lg">
           {tabs.map((tab) => (
             <button
@@ -368,18 +374,6 @@ export default function Recent() {
           )}
         </div>
       </div>
-
-      {displayedSessions.length > 0 && !isLoading && (
-        <div className="px-3 py-2 shrink-0 border-t border-gray-100 dark:border-gray-800">
-          <div className="flex items-center gap-1 text-[11px] text-gray-400 dark:text-gray-600">
-            <Clock size={10} />
-            <span>
-              {displayedSessions.length} session
-              {displayedSessions.length !== 1 ? "s" : ""}
-            </span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
