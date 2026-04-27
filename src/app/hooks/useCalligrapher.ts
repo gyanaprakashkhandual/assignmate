@@ -16,7 +16,7 @@ import {
     uploadHandwritingSheet,
     uploadFontFile,
     downloadTemplate,
-} from "@/app/lib/types/caliligrapher.types";
+} from "@/app/lib/apis/calligrapher.api";
 
 export function useCalligraphr() {
     const dispatch = useDispatch();
