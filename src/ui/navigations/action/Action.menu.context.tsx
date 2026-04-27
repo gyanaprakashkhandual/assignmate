@@ -1,5 +1,4 @@
-/* eslint-disable react-refresh/only-export-components */
-'use client'
+"use client";
 import React, {
   createContext,
   useContext,
@@ -50,7 +49,10 @@ type ActionMenuAction =
   | { type: "RESET_SUBMENU" }
   | { type: "SET_SUBMENU_PATH"; payload: string[] };
 
-function reducer(state: ActionMenuState, action: ActionMenuAction): ActionMenuState {
+function reducer(
+  state: ActionMenuState,
+  action: ActionMenuAction,
+): ActionMenuState {
   switch (action.type) {
     case "OPEN":
       return { ...state, isOpen: true, activeSubmenuPath: [] };
@@ -59,9 +61,15 @@ function reducer(state: ActionMenuState, action: ActionMenuAction): ActionMenuSt
     case "TOGGLE":
       return { ...state, isOpen: !state.isOpen, activeSubmenuPath: [] };
     case "PUSH_SUBMENU":
-      return { ...state, activeSubmenuPath: [...state.activeSubmenuPath, action.payload] };
+      return {
+        ...state,
+        activeSubmenuPath: [...state.activeSubmenuPath, action.payload],
+      };
     case "POP_SUBMENU":
-      return { ...state, activeSubmenuPath: state.activeSubmenuPath.slice(0, -1) };
+      return {
+        ...state,
+        activeSubmenuPath: state.activeSubmenuPath.slice(0, -1),
+      };
     case "RESET_SUBMENU":
       return { ...state, activeSubmenuPath: [] };
     case "SET_SUBMENU_PATH":
@@ -171,6 +179,9 @@ export function ActionMenuProvider({
 
 export function useActionMenuContext(): ActionMenuContextValue {
   const ctx = useContext(ActionMenuContext);
-  if (!ctx) throw new Error("useActionMenuContext must be used within ActionMenuProvider");
+  if (!ctx)
+    throw new Error(
+      "useActionMenuContext must be used within ActionMenuProvider",
+    );
   return ctx;
 }

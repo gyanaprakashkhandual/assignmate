@@ -1,4 +1,5 @@
-'use client'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+"use client";
 import React, {
   useEffect,
   useRef,
@@ -6,8 +7,9 @@ import React, {
   useState,
   useCallback,
 } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, ChevronLeft } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import {
   ActionMenuProvider,
   useActionMenuContext,
@@ -107,61 +109,76 @@ const variantIconStyles: Record<ActionItemVariant, string> = {
   success: "text-emerald-500 dark:text-emerald-400",
 };
 
-type ResolvedAlign = "bottom-left" | "bottom-right" | "top-left" | "top-right";
-type SubmenuSide = "right" | "left";
+const MENU_GAP = 6;
 
-function useAutoAlign(
-  open: boolean,
-  anchorRef: React.RefObject<HTMLElement | null>,
-  preferred: MenuAlign,
+type ResolvedAlign = "bottom-left" | "bottom-right" | "top-left" | "top-right";
+
+interface MenuPosition {
+  top?: number;
+  bottom?: number;
+  left?: number;
+  right?: number;
+}
+
+function computeMenuPosition(
+  triggerRect: DOMRect,
   menuWidth: number,
   menuHeight: number,
-): ResolvedAlign {
-  const [align, setAlign] = useState<ResolvedAlign>("bottom-left");
+  preferred: MenuAlign,
+): { pos: MenuPosition; resolved: ResolvedAlign } {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
 
-  useLayoutEffect(() => {
-    if (!open || !anchorRef.current) return;
-    if (preferred !== "auto") {
-      setAlign(preferred as ResolvedAlign);
-      return;
-    }
-    const rect = anchorRef.current.getBoundingClientRect();
-    const spaceBelow = window.innerHeight - rect.bottom;
-    const spaceAbove = rect.top;
-    const spaceRight = window.innerWidth - rect.left;
-    const vert =
+  const spaceBelow = vh - triggerRect.bottom;
+  const spaceAbove = triggerRect.top;
+  const spaceRight = vw - triggerRect.left;
+  const spaceLeft = triggerRect.right;
+
+  let vert: "bottom" | "top";
+  let horiz: "left" | "right";
+
+  if (preferred !== "auto") {
+    [vert, horiz] = preferred.split("-") as [
+      "bottom" | "top",
+      "left" | "right",
+    ];
+  } else {
+    vert =
       spaceBelow >= menuHeight || spaceBelow >= spaceAbove ? "bottom" : "top";
-    const horiz = spaceRight >= menuWidth ? "left" : "right";
-    setAlign(`${vert}-${horiz}` as ResolvedAlign);
-  }, [open, anchorRef, preferred, menuWidth, menuHeight]);
+    horiz = spaceRight >= menuWidth ? "left" : "right";
+  }
 
-  return align;
+  const pos: MenuPosition = {};
+
+  if (vert === "bottom") {
+    pos.top = triggerRect.bottom + MENU_GAP + window.scrollY;
+  } else {
+    pos.top = triggerRect.top - menuHeight - MENU_GAP + window.scrollY;
+  }
+
+  if (horiz === "left") {
+    const left = triggerRect.left + window.scrollX;
+    pos.left = Math.min(left, vw - menuWidth - 8);
+  } else {
+    const right = vw - triggerRect.right + window.scrollX;
+    pos.left = Math.max(triggerRect.right - menuWidth + window.scrollX, 8);
+  }
+
+  return { pos, resolved: `${vert}-${horiz}` as ResolvedAlign };
 }
 
-function useSubmenuSide(
-  itemRef: React.RefObject<HTMLElement | null>,
+function computeSubmenuPosition(
+  itemRect: DOMRect,
   menuWidth: number,
-): SubmenuSide {
-  const [side, setSide] = useState<SubmenuSide>("right");
-
-  useLayoutEffect(() => {
-    if (!itemRef.current) return;
-    const rect = itemRef.current.getBoundingClientRect();
-    setSide(window.innerWidth - rect.right >= menuWidth ? "right" : "left");
-  });
-
-  return side;
-}
-
-function resolvedAlignToStyle(align: ResolvedAlign): React.CSSProperties {
-  const base: React.CSSProperties = { position: "absolute", zIndex: 50 };
-  if (align === "bottom-left")
-    return { ...base, top: "100%", left: 0, marginTop: 6 };
-  if (align === "bottom-right")
-    return { ...base, top: "100%", right: 0, marginTop: 6 };
-  if (align === "top-left")
-    return { ...base, bottom: "100%", left: 0, marginBottom: 6 };
-  return { ...base, bottom: "100%", right: 0, marginBottom: 6 };
+): { left: number; top: number } {
+  const vw = window.innerWidth;
+  const spaceRight = vw - itemRect.right;
+  const left =
+    spaceRight >= menuWidth + 4
+      ? itemRect.right + 4 + window.scrollX
+      : itemRect.left - menuWidth - 4 + window.scrollX;
+  const top = itemRect.top + window.scrollY;
+  return { left, top };
 }
 
 const menuMotion = {
@@ -172,46 +189,106 @@ const menuMotion = {
 };
 
 const submenuMotion = {
-  initial: { opacity: 0, x: 8, scale: 0.97 },
+  initial: { opacity: 0, x: 6, scale: 0.97 },
   animate: { opacity: 1, x: 0, scale: 1 },
-  exit: { opacity: 0, x: 8, scale: 0.97 },
-  transition: { duration: 0.13, ease: "easeOut" },
+  exit: { opacity: 0, x: 6, scale: 0.97 },
+  transition: { duration: 0.12, ease: "easeOut" },
 };
 
-interface ActionRowProps {
+function MenuPanel({
+  items,
+  size,
+  onClose,
+  style,
+}: {
+  items: ActionItem[];
+  size: ActionMenuSize;
+  onClose: () => void;
+  style?: React.CSSProperties;
+}) {
+  const s = sizeConfig[size];
+  return (
+    <div
+      className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg shadow-black/10 dark:shadow-black/40 overflow-hidden"
+      style={{ minWidth: s.menuWidth, ...style }}
+    >
+      <div className="p-1">
+        {items.map((item, idx) => (
+          <React.Fragment key={item.id}>
+            {item.dividerBefore && idx > 0 && (
+              <div className="my-1 -mx-1 border-t border-gray-100 dark:border-gray-800" />
+            )}
+            {item.header && (
+              <div
+                className={`${s.itemPx} pt-2 pb-1 ${s.headerText} font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 select-none`}
+              >
+                {item.header}
+              </div>
+            )}
+            <ActionRow item={item} size={size} onClose={onClose} />
+          </React.Fragment>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ActionRow({
+  item,
+  size,
+  onClose,
+}: {
   item: ActionItem;
   size: ActionMenuSize;
   onClose: () => void;
-}
-
-function ActionRow({ item, size, onClose }: ActionRowProps) {
-  const { pushSubmenu, onAction } = useActionMenuContext();
+}) {
+  const { onAction } = useActionMenuContext();
   const s = sizeConfig[size];
   const hasChildren = !!item.children?.length;
   const variant = item.variant ?? "default";
   const itemRef = useRef<HTMLDivElement>(null);
   const [submenuOpen, setSubmenuOpen] = useState(false);
-  const submenuSide = useSubmenuSide(
-    itemRef as React.RefObject<HTMLElement | null>,
-    s.menuWidth,
-  );
+  const [submenuPos, setSubmenuPos] = useState<{
+    left: number;
+    top: number;
+  } | null>(null);
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleMouseEnter = useCallback(() => {
+    if (item.disabled || !hasChildren) return;
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    if (itemRef.current) {
+      const rect = itemRef.current.getBoundingClientRect();
+      setSubmenuPos(computeSubmenuPosition(rect, s.menuWidth));
+    }
+    setSubmenuOpen(true);
+  }, [item.disabled, hasChildren, s.menuWidth]);
+
+  const handleMouseLeave = useCallback(() => {
+    if (!hasChildren) return;
+    hideTimer.current = setTimeout(() => setSubmenuOpen(false), 100);
+  }, [hasChildren]);
+
+  const handleSubmenuMouseEnter = useCallback(() => {
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+  }, []);
+
+  const handleSubmenuMouseLeave = useCallback(() => {
+    hideTimer.current = setTimeout(() => setSubmenuOpen(false), 100);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (hideTimer.current) clearTimeout(hideTimer.current);
+    };
+  }, []);
 
   const handleClick = useCallback(() => {
-    if (item.disabled) return;
-    if (hasChildren) return;
+    if (item.disabled || hasChildren) return;
     item.onClick?.();
     onAction?.(item);
     onClose();
   }, [item, hasChildren, onAction, onClose]);
-
-  const handleMouseEnter = useCallback(() => {
-    if (item.disabled) return;
-    if (hasChildren) setSubmenuOpen(true);
-  }, [item.disabled, hasChildren]);
-
-  const handleMouseLeave = useCallback(() => {
-    if (hasChildren) setSubmenuOpen(false);
-  }, [hasChildren]);
 
   return (
     <div
@@ -279,74 +356,35 @@ function ActionRow({ item, size, onClose }: ActionRowProps) {
         )}
       </button>
 
-      <AnimatePresence>
-        {hasChildren && submenuOpen && (
-          <motion.div
-            {...submenuMotion}
+      {hasChildren &&
+        submenuOpen &&
+        submenuPos &&
+        createPortal(
+          <div
             style={{
               position: "absolute",
-              top: 0,
-              ...(submenuSide === "right"
-                ? { left: "100%", paddingLeft: 4 }
-                : { right: "100%", paddingRight: 4 }),
-              zIndex: 60,
+              top: submenuPos.top,
+              left: submenuPos.left,
+              zIndex: 99999,
               minWidth: s.menuWidth,
             }}
+            onMouseEnter={handleSubmenuMouseEnter}
+            onMouseLeave={handleSubmenuMouseLeave}
           >
-            <MenuPanel
-              items={item.children!}
-              size={size}
-              onClose={onClose}
-              depth={1}
-            />
-          </motion.div>
+            <AnimatePresence>
+              <motion.div {...submenuMotion}>
+                <MenuPanel
+                  items={item.children!}
+                  size={size}
+                  onClose={onClose}
+                />
+              </motion.div>
+            </AnimatePresence>
+          </div>,
+          document.body,
         )}
-      </AnimatePresence>
     </div>
   );
-}
-
-interface MenuPanelProps {
-  items: ActionItem[];
-  size: ActionMenuSize;
-  onClose: () => void;
-  depth?: number;
-}
-
-function MenuPanel({ items, size, onClose, depth = 0 }: MenuPanelProps) {
-  const s = sizeConfig[size];
-
-  return (
-    <div
-      className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg shadow-black/10 dark:shadow-black/40 overflow-hidden"
-      style={{ minWidth: s.menuWidth }}
-    >
-      <div className="p-1">
-        {items.map((item, idx) => (
-          <React.Fragment key={item.id}>
-            {item.dividerBefore && idx > 0 && (
-              <div className="my-1 -mx-1 border-t border-gray-100 dark:border-gray-800" />
-            )}
-            {item.header && (
-              <div
-                className={`${s.itemPx} pt-2 pb-1 ${s.headerText} font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 select-none`}
-              >
-                {item.header}
-              </div>
-            )}
-            <ActionRow item={item} size={size} onClose={onClose} />
-          </React.Fragment>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-interface ActionMenuInnerProps {
-  items: ActionItem[];
-  size: ActionMenuSize;
-  trigger: React.ReactNode;
-  align: MenuAlign;
 }
 
 function ActionMenuInner({
@@ -354,38 +392,76 @@ function ActionMenuInner({
   size,
   trigger,
   align,
-}: ActionMenuInnerProps) {
+}: {
+  items: ActionItem[];
+  size: ActionMenuSize;
+  trigger: React.ReactNode;
+  align: MenuAlign;
+}) {
   const { state, toggle, close } = useActionMenuContext();
   const s = sizeConfig[size];
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const estimatedHeight = Math.min(items.length * 36 + 16, 400);
-  const resolvedAlign = useAutoAlign(
-    state.isOpen,
-    wrapRef as React.RefObject<HTMLElement | null>,
-    align,
-    s.menuWidth,
-    estimatedHeight,
-  );
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const [menuPos, setMenuPos] = useState<MenuPosition | null>(null);
+
+  const estimatedMenuHeight = Math.min(items.length * 36 + 16, 400);
+
+  useLayoutEffect(() => {
+    if (!state.isOpen || !triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    const { pos } = computeMenuPosition(
+      rect,
+      s.menuWidth,
+      estimatedMenuHeight,
+      align,
+    );
+    setMenuPos(pos);
+  }, [state.isOpen, align, s.menuWidth, estimatedMenuHeight]);
 
   useEffect(() => {
     if (!state.isOpen) return;
-    const handler = (e: MouseEvent) => {
-      if (wrapRef.current && !wrapRef.current.contains(e.target as Node))
-        close();
+
+    const handleScroll = () => {
+      if (!triggerRef.current) return;
+      const rect = triggerRef.current.getBoundingClientRect();
+      const { pos } = computeMenuPosition(
+        rect,
+        s.menuWidth,
+        estimatedMenuHeight,
+        align,
+      );
+      setMenuPos(pos);
     };
-    const keyHandler = (e: KeyboardEvent) => {
+
+    const handleOutside = (e: MouseEvent) => {
+      if (
+        triggerRef.current &&
+        !triggerRef.current.contains(e.target as Node)
+      ) {
+        const menuEl = document.getElementById("action-menu-portal");
+        if (menuEl && menuEl.contains(e.target as Node)) return;
+        close();
+      }
+    };
+
+    const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") close();
     };
-    document.addEventListener("mousedown", handler);
-    document.addEventListener("keydown", keyHandler);
+
+    document.addEventListener("mousedown", handleOutside);
+    document.addEventListener("keydown", handleKey);
+    window.addEventListener("scroll", handleScroll, true);
+    window.addEventListener("resize", handleScroll);
+
     return () => {
-      document.removeEventListener("mousedown", handler);
-      document.removeEventListener("keydown", keyHandler);
+      document.removeEventListener("mousedown", handleOutside);
+      document.removeEventListener("keydown", handleKey);
+      window.removeEventListener("scroll", handleScroll, true);
+      window.removeEventListener("resize", handleScroll);
     };
-  }, [state.isOpen, close]);
+  }, [state.isOpen, close, align, s.menuWidth, estimatedMenuHeight]);
 
   return (
-    <div ref={wrapRef} className="relative inline-block">
+    <div ref={triggerRef} className="relative inline-block">
       <div
         onClick={() => {
           if (!state.disabled) toggle();
@@ -399,16 +475,27 @@ function ActionMenuInner({
         {trigger}
       </div>
 
-      <AnimatePresence>
-        {state.isOpen && (
-          <motion.div
-            {...menuMotion}
-            style={resolvedAlignToStyle(resolvedAlign)}
-          >
-            <MenuPanel items={items} size={size} onClose={close} depth={0} />
-          </motion.div>
+      {state.isOpen &&
+        menuPos &&
+        createPortal(
+          <AnimatePresence>
+            <motion.div
+              key="action-menu"
+              id="action-menu-portal"
+              {...menuMotion}
+              style={{
+                position: "absolute",
+                top: menuPos.top,
+                left: menuPos.left,
+                zIndex: 99999,
+                minWidth: s.menuWidth,
+              }}
+            >
+              <MenuPanel items={items} size={size} onClose={close} />
+            </motion.div>
+          </AnimatePresence>,
+          document.body,
         )}
-      </AnimatePresence>
     </div>
   );
 }
@@ -478,8 +565,7 @@ export function DefaultTrigger({
       className={`
         inline-flex items-center gap-1.5 ${s.triggerPx} ${s.triggerPy}
         ${s.triggerText} font-medium rounded-lg transition-colors duration-100
-        text-gray-700 dark:text-gray-200
-        ${variantClass}
+        text-gray-700 dark:text-gray-200 ${variantClass}
       `}
     >
       {leadingIcon && (
