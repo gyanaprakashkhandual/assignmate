@@ -12,8 +12,8 @@ import {
   CheckCircle2,
   ImageOff,
 } from "lucide-react";
-import { useChat } from "@/hooks/useChat.hooks";
-import { ICustomizations, PaperStyle } from "@/types/chat.types";
+import { useChat } from "@/app/hooks/useChat.hooks";
+import { ICustomizations, PaperStyle } from "@/app/lib/types/chat.types";
 
 interface PdfPreviewProps {
   sessionId: string;
