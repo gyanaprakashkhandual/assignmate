@@ -25,6 +25,7 @@ import {
   IconTrigger,
 } from "@/ui/navigations/action/Action.menu.ui";
 import type { ActionItem } from "@/ui/navigations/action/Action.menu.context";
+import { Tooltip } from "@/ui/data/tooltip/Tooltip.ui";
 
 function SessionCard({
   session,
@@ -113,6 +114,7 @@ function SessionCard({
             )}
           </div>
           <div className="flex-1 min-w-0 pr-6">
+            <Tooltip content={session.title}>
             <p
               className={`text-[13px] leading-snug truncate font-medium ${
                 isActive
@@ -122,9 +124,7 @@ function SessionCard({
             >
               {session.title}
             </p>
-            {session.isStarred && (
-              <Star size={10} className="mt-1 text-amber-400 fill-amber-400" />
-            )}
+            </Tooltip>
           </div>
         </div>
       </button>
@@ -311,21 +311,6 @@ export default function Recent() {
           ))}
         </div>
       </div>
-
-      <div className="px-3 py-2 flex items-center justify-between shrink-0">
-        <span className="text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
-          Recent
-        </span>
-        {!isLoading && (
-          <button
-            onClick={() => fetchSessions()}
-            className="text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-          >
-            <RefreshCw size={11} />
-          </button>
-        )}
-      </div>
-
       <div className="flex-1 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-gray-200 dark:scrollbar-thumb-gray-700 scrollbar-track-transparent">
         <div className="flex flex-col gap-0.5 pb-2">
           {isLoading ? (

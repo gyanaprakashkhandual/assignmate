@@ -1,19 +1,31 @@
-'use client'
-import React, { useState, useRef, useEffect } from "react";
+/* eslint-disable react-hooks/set-state-in-effect */
+"use client";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import type { Transition } from "framer-motion";
+import { Check, Copy } from "lucide-react";
 import {
-  positionClasses,
   calculatePosition,
+  computeTooltipPortalPosition,
+  arrowPositionStyles,
 } from "./Tooltip.context";
+
+type TooltipPosition = "top" | "bottom" | "left" | "right";
 
 interface TooltipProps {
   content?: string;
   children: React.ReactNode;
-  position?: "top" | "bottom" | "left" | "right";
+  position?: TooltipPosition;
   delay?: number;
   maxWidth?: number;
   className?: string;
+  showArrow?: boolean;
+  showCopy?: boolean;
+  disabled?: boolean;
 }
+
+const tooltipTransition: Transition = { duration: 0.15, ease: "easeOut" };
 
 export const Tooltip = ({
   content = "",
@@ -22,61 +34,149 @@ export const Tooltip = ({
   delay = 0,
   maxWidth = 200,
   className = "",
+  showArrow = false,
+  showCopy = false,
+  disabled = false,
 }: TooltipProps) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [calculatedPosition, setCalculatedPosition] = useState(position);
+  const [resolvedPosition, setResolvedPosition] = useState<string>(position);
+  const [portalStyle, setPortalStyle] = useState<{
+    top: number;
+    left: number;
+    transformOrigin: string;
+  } | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
   const triggerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
-
-  // ...existing code...
+  const delayTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    if (isVisible && triggerRef.current && tooltipRef.current) {
-      const trigger = triggerRef.current.getBoundingClientRect();
-      const tooltip = tooltipRef.current.getBoundingClientRect();
-      const newPosition = calculatePosition(trigger, tooltip, position);
-      setCalculatedPosition(newPosition as "top" | "bottom" | "left" | "right");
-    }
-  }, [isVisible, position]);
+    setMounted(true);
+    return () => {
+      if (delayTimer.current) clearTimeout(delayTimer.current);
+      if (copyTimer.current) clearTimeout(copyTimer.current);
+    };
+  }, []);
 
-  // ...existing code...
-  const animationVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { opacity: 1, scale: 1 },
-    exit: { opacity: 0, scale: 0.8 },
-  };
+  const updatePosition = useCallback(() => {
+    if (!triggerRef.current || !tooltipRef.current) return;
+    const triggerRect = triggerRef.current.getBoundingClientRect();
+    const tooltipRect = tooltipRef.current.getBoundingClientRect();
+    const newPos = calculatePosition(triggerRect, tooltipRect, position);
+    setResolvedPosition(newPos);
+    const coords = computeTooltipPortalPosition(
+      triggerRect,
+      tooltipRect,
+      newPos,
+    );
+    setPortalStyle(coords);
+  }, [position]);
+
+  useEffect(() => {
+    if (!isVisible) return;
+    const frame = requestAnimationFrame(updatePosition);
+    window.addEventListener("scroll", updatePosition, true);
+    window.addEventListener("resize", updatePosition);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", updatePosition, true);
+      window.removeEventListener("resize", updatePosition);
+    };
+  }, [isVisible, updatePosition]);
+
+  const show = useCallback(() => {
+    if (disabled || !content) return;
+    if (delayTimer.current) clearTimeout(delayTimer.current);
+    if (delay > 0) {
+      delayTimer.current = setTimeout(() => setIsVisible(true), delay);
+    } else {
+      setIsVisible(true);
+    }
+  }, [disabled, content, delay]);
+
+  const hide = useCallback(() => {
+    if (delayTimer.current) clearTimeout(delayTimer.current);
+    setIsVisible(false);
+  }, []);
+
+  const handleCopy = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      if (!content) return;
+      navigator.clipboard.writeText(content).then(() => {
+        setCopied(true);
+        if (copyTimer.current) clearTimeout(copyTimer.current);
+        copyTimer.current = setTimeout(() => setCopied(false), 1800);
+      });
+    },
+    [content],
+  );
+
+  if (!content || disabled) {
+    return <>{children}</>;
+  }
+
+  const tooltipNode = (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          ref={tooltipRef}
+          role="tooltip"
+          initial={{ opacity: 0, scale: 0.92 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.92 }}
+          transition={tooltipTransition}
+          style={{
+            position: "fixed",
+            top: portalStyle?.top ?? -9999,
+            left: portalStyle?.left ?? -9999,
+            transformOrigin: portalStyle?.transformOrigin ?? "center top",
+            zIndex: 99999,
+            maxWidth,
+            pointerEvents: showCopy ? "auto" : "none",
+          }}
+          className={`
+            bg-[#3c4043] text-white text-[13px] leading-[1.4] px-2.5 py-1.5
+            rounded shadow-[0_2px_8px_rgba(0,0,0,0.26)] font-medium
+            flex items-center gap-1.5
+          `}
+        >
+          {showArrow && (
+            <span
+              className={`absolute w-0 h-0 border-solid ${arrowPositionStyles[resolvedPosition] ?? arrowPositionStyles.bottom}`}
+            />
+          )}
+
+          <span className="block truncate min-w-0 flex-1">{content}</span>
+
+          {showCopy && (
+            <button
+              onClick={handleCopy}
+              className="shrink-0 flex items-center justify-center w-4 h-4 rounded text-white/60 hover:text-white transition-colors duration-100"
+              aria-label="Copy"
+            >
+              {copied ? <Check size={11} /> : <Copy size={11} />}
+            </button>
+          )}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 
   return (
-    <div className={`relative inline-block ${className}`}>
-      <div
-        ref={triggerRef}
-        onMouseEnter={() => setTimeout(() => setIsVisible(true), delay)}
-        onMouseLeave={() => setIsVisible(false)}
-        onFocus={() => setIsVisible(true)}
-        onBlur={() => setIsVisible(false)}
-      >
-        {children}
-      </div>
-
-      <AnimatePresence>
-        {isVisible && (
-          <motion.div
-            ref={tooltipRef}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            variants={animationVariants}
-            transition={{ duration: 0.2 }}
-            className={`
-              absolute z-9999  bg-[#3c4043] text-white text-[13px] leading-4.5 px-2.5 py-1.5 rounded shadow-[0_2px_8px_rgba(0,0,0,0.26)] whitespace-nowrap font-semi-bold pointer-events-none
-              ${positionClasses[calculatedPosition] || positionClasses.top}
-            `}
-            style={{ maxWidth: `${maxWidth}px` }}
-          >
-            {content}
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <div
+      ref={triggerRef}
+      className={`relative ${className}`}
+      onMouseEnter={show}
+      onMouseLeave={hide}
+      onFocus={show}
+      onBlur={hide}
+    >
+      {children}
+      {mounted && createPortal(tooltipNode, document.body)}
     </div>
   );
 };
