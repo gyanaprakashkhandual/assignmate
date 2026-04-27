@@ -95,7 +95,7 @@ const { sessionId } = resolvedParams;
 
           {/* Input */}
           <div className="flex-shrink-0 border-t border-black/8 bg-white/80 px-4 py-4 backdrop-blur-sm dark:border-white/8 dark:bg-zinc-950/80 md:px-6">
-            <div className="mx-auto max-w-2xl">
+            <div className="mx-auto max-w-7xl">
               <ChatBox sessionId={sessionId} />
             </div>
           </div>
