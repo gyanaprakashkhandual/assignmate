@@ -181,18 +181,22 @@ function computeSubmenuPosition(
   return { left, top };
 }
 
+import type { Transition } from "framer-motion";
+
+const menuTransition: Transition = { duration: 0.13, ease: "easeOut" };
 const menuMotion = {
   initial: { opacity: 0, scale: 0.97, y: -4 },
   animate: { opacity: 1, scale: 1, y: 0 },
   exit: { opacity: 0, scale: 0.97, y: -4 },
-  transition: { duration: 0.13, ease: "easeOut" },
+  transition: menuTransition,
 };
 
+const submenuTransition: Transition = { duration: 0.12, ease: "easeOut" };
 const submenuMotion = {
   initial: { opacity: 0, x: 6, scale: 0.97 },
   animate: { opacity: 1, x: 0, scale: 1 },
   exit: { opacity: 0, x: 6, scale: 0.97 },
-  transition: { duration: 0.12, ease: "easeOut" },
+  transition: submenuTransition,
 };
 
 function MenuPanel({
