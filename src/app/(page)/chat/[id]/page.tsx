@@ -46,7 +46,7 @@ export default function ChatSessionPage({ params }: ChatPageProps) {
   const hasAiResponse = aiMessages.length > 0;
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-[#f9f9f8] antialiased dark:bg-zinc-950">
+    <div className="flex h-screen flex-col overflow-hidden bg-white antialiased dark:bg-zinc-950">
 
       {/* ── Top bar ──────────────────────────────────────────────────── */}
       <motion.header

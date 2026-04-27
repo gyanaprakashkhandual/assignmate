@@ -1,9 +1,18 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, User, Sparkles } from "lucide-react";
+import {
+  Loader2,
+  User,
+  Sparkles,
+  ThumbsDown,
+  ThumbsUp,
+  Copy,
+  Check,
+} from "lucide-react";
 import { useMessage } from "@/app/hooks/useMessage.hooks";
 import { MessageParser } from "@/app/components/message-parser/core/Parser.core";
 import { IMessageResponse } from "@/app/lib/types/message.types";
@@ -49,6 +58,20 @@ function UserBubble({ message }: { message: IMessageResponse }) {
 }
 
 function AiBubble({ message }: { message: IMessageResponse }) {
+  const [copied, setCopied] = useState(false);
+  const [liked, setLiked] = useState<"like" | "dislike" | null>(null);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(message.content);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const timestamp = new Date(message.createdAt).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -60,20 +83,74 @@ function AiBubble({ message }: { message: IMessageResponse }) {
         <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-black/5 dark:bg-white/8">
           <Sparkles size={13} className="text-black/50 dark:text-white/50" />
         </div>
-        <div className="min-w-0 rounded-2xl rounded-bl-sm bg-white px-4 py-3 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-800 dark:ring-white/[0.06]">
-          <MessageParser
-            content={message.content}
-            streaming={false}
-            className="text-sm text-black/80 dark:text-white/80"
-          />
-          {message.metadata?.processingTimeMs && (
-            <p className="mt-2 text-[10px] text-black/25 dark:text-white/25">
-              {(message.metadata.processingTimeMs / 1000).toFixed(2)}s
-              {message.metadata.tokensUsed
-                ? ` · ${message.metadata.tokensUsed} tokens`
-                : ""}
-            </p>
-          )}
+
+        <div className="min-w-0">
+          <div className="rounded-2xl rounded-bl-sm bg-white px-4 py-3 dark:bg-zinc-800">
+            <MessageParser
+              content={message.content}
+              streaming={false}
+              className="text-sm text-black/80 dark:text-white/80"
+            />
+          </div>
+
+          {/* Action row */}
+          <div className="mt-1.5 flex items-center gap-1 pl-1">
+            {/* Timestamp */}
+            <span className="mr-1.5 text-[15px] text-black dark:text-white/25">
+              {timestamp}
+            </span>
+
+            {/* Copy */}
+            <button
+              onClick={handleCopy}
+              title={copied ? "Copied!" : "Copy"}
+              className="flex h-6 w-6 items-center justify-center rounded-md text-black transition-colors hover:bg-black/5 hover:text-black/50 dark:text-white/25 dark:hover:bg-white/8 dark:hover:text-white/50"
+            >
+              {copied ? (
+                <Check size={15} className="text-emerald-500" />
+              ) : (
+                <Copy size={15} />
+              )}
+            </button>
+
+            {/* Like */}
+            <button
+              onClick={() =>
+                setLiked((prev: string) => (prev === "like" ? null : "like"))
+              }
+              title="Like"
+              className={`flex h-6 w-6 items-center justify-center rounded-md transition-colors hover:bg-black/5 dark:hover:bg-white/8 ${
+                liked === "like"
+                  ? "text-emerald-500"
+                  : "text-black hover:text-black/50 dark:text-white/25 dark:hover:text-white/50"
+              }`}
+            >
+              <ThumbsUp
+                size={15}
+                className={liked === "like" ? "fill-emerald-500" : ""}
+              />
+            </button>
+
+            {/* Dislike */}
+            <button
+              onClick={() =>
+                setLiked((prev: string) =>
+                  prev === "dislike" ? null : "dislike",
+                )
+              }
+              title="Dislike"
+              className={`flex h-6 w-6 items-center justify-center rounded-md transition-colors hover:bg-black/5 dark:hover:bg-white/8 ${
+                liked === "dislike"
+                  ? "text-red-400"
+                  : "text-black hover:text-black/50 dark:text-white/25 dark:hover:text-white/50"
+              }`}
+            >
+              <ThumbsDown
+                size={15}
+                className={liked === "dislike" ? "fill-red-400" : ""}
+              />
+            </button>
+          </div>
         </div>
       </div>
     </motion.div>
@@ -156,7 +233,7 @@ export default function MessageThread({ sessionId }: MessageThreadProps) {
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="mx-auto max-w-2xl py-6">
+      <div className="mx-auto max-w-4xl py-6">
         <AnimatePresence initial={false}>
           {pairs.map((pair, idx) => (
             <div key={idx} className="mb-2">
