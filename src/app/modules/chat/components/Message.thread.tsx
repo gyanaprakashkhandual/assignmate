@@ -17,6 +17,7 @@ import { useMessage } from "@/app/hooks/useMessage.hooks";
 import { MessageParser } from "@/app/components/message-parser/core/Parser.core";
 import { IMessageResponse } from "@/app/lib/types/message.types";
 import { useAuth } from "@/app/context/Auth.context";
+import BrandIcon from "@/app/components/icons/Brand.icon";
 
 interface MessageThreadProps {
   sessionId: string;
@@ -80,9 +81,9 @@ function AiBubble({ message }: { message: IMessageResponse }) {
       className="flex justify-start px-4 py-1.5 md:px-6"
     >
       <div className="flex max-w-[82%] items-start gap-2.5">
-        <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-black/5 dark:bg-white/8">
-          <Sparkles size={13} className="text-black/50 dark:text-white/50" />
-        </div>
+        
+          <BrandIcon className="h-8 w-8text-black dark:text-white/50" />
+   
 
         <div className="min-w-0">
           <div className="rounded-2xl rounded-bl-sm bg-white px-4 py-3 dark:bg-zinc-800">

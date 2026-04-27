@@ -1,13 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
-    <rect x="14" y="8" width="58" height="76" rx="6" stroke="#000" stroke-width="6"/>
-    <rect x="14" y="8" width="58" height="18" rx="6" fill="#000"/>
-    <rect x="14" y="18" width="58" height="8" fill="#000"/>
-    <line x1="26" y1="40" x2="60" y2="40" stroke="#000" stroke-width="5" stroke-linecap="round"/>
-    <path d="M26 54 Q34 49 42 54 Q50 59 58 54 Q64 49 70 54" stroke="#000" stroke-width="4.5" stroke-linecap="round"/>
-    <path d="M26 66 Q33 61 40 66 Q47 71 54 66" stroke="#000" stroke-width="4.5" stroke-linecap="round"/>
-    <g transform="translate(54 52) rotate(-38)">
-        <rect x="0" y="0" width="10" height="34" rx="2" fill="#000"/>
-        <polygon points="0,34 10,34 5,44" fill="#000"/>
-        <rect x="2" y="3" width="6" height="6" rx="1" fill="white"/>
-    </g>
+<svg width="32" height="32" viewBox="0 0 24 24" fill="none"
+    xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.5 2.5C18.3284 1.67157 19.6716 1.67157 20.5 2.5C21.3284 3.32843 21.3284 4.67157 20.5 5.5L19.5 6.5L16.5 3.5L17.5 2.5Z" fill="black"/>
+    <path d="M15 5L3 17V21H7L19 9L15 5Z" fill="black"/>
 </svg>
