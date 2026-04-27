@@ -15,6 +15,7 @@ import { useChat } from "@/app/hooks/useChat.hooks";
 import MessageThread from "@/app/modules/chat/components/Message.thread";
 import ChatBox from "@/app/modules/chat/core/Chat.box";
 import PdfPreview from "@/app/modules/chat/components/Pdf.preview";
+import { Tooltip } from "@/ui/data/tooltip/Tooltip.ui";
 interface ChatPageProps {
   params: Promise<{ id: string }>;
 }
@@ -90,13 +91,14 @@ export default function ChatSessionPage({ params }: ChatPageProps) {
       {/* Right — actions */}
       <div className="flex flex-shrink-0 items-center gap-0.5">
         {/* Star */}
+        <Tooltip content={currentSessionIsStarred ? "Unstar" : "Star"} position="top" showArrow>
         <button
           onClick={() =>
             currentSessionIsStarred
               ? unstarSession(sessionId)
               : starSession(sessionId)
           }
-          title={currentSessionIsStarred ? "Unstar" : "Star"}
+        
           className="flex h-7 w-7 items-center justify-center rounded-lg text-black/30 transition-colors hover:bg-black/[0.06] hover:text-black dark:text-white/30 dark:hover:bg-white/[0.07] dark:hover:text-white"
         >
           <Star
@@ -109,16 +111,18 @@ export default function ChatSessionPage({ params }: ChatPageProps) {
             }
           />
         </button>
+        </Tooltip>
 
         {/* Archive */}
         {!isArchived && (
+            <Tooltip content="Archive" position="top" showArrow>
           <button
             onClick={() => archiveSession(sessionId)}
-            title="Archive session"
             className="flex h-7 w-7 items-center justify-center rounded-lg text-black/30 transition-colors hover:bg-black/[0.06] hover:text-black dark:text-white/30 dark:hover:bg-white/[0.07] dark:hover:text-white"
           >
             <Archive size={13} strokeWidth={2} />
           </button>
+          </Tooltip>
         )}
 
         {/* Preview panel toggle — mobile/tablet only */}

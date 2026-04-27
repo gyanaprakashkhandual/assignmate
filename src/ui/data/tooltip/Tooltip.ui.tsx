@@ -140,7 +140,7 @@ export const Tooltip = ({
           }}
           className={`
             bg-[#3c4043] text-white text-[13px] leading-[1.4] px-2.5 py-1.5
-            rounded shadow-[0_2px_8px_rgba(0,0,0,0.26)] font-medium
+            rounded-md shadow-[0_2px_8px_rgba(0,0,0,0.26)] font-normal
             flex items-center gap-1.5
           `}
         >

@@ -117,7 +117,7 @@ export default function ChatBox({
                 <Loader2 size={15} className="animate-spin" />
               </motion.span>
             ) : (
-              <Tooltip content="Send">
+              <Tooltip content="Send" showArrow>
                 <motion.span
                   key="send"
                   initial={{ opacity: 0, scale: 0.7 }}
