@@ -20,7 +20,7 @@ import {
 
 export function useCalligraphr() {
     const dispatch = useDispatch();
-    const state    = useSelector((s: RootState) => s.calligraphr);
+    const state    = useSelector((s: RootState) => s.calligrapher);
     const [uploadProgress, setUploadProgress] = useState(0);
 
     // ── Step 1: open Calligraphr template ────────────────────────────────────

@@ -20,121 +20,11 @@ import {
 } from "lucide-react";
 import { useChat } from "@/app/hooks/useChat.hooks";
 import { IChatSessionResponse } from "@/app/lib/types/chat.types";
-
-function formatRelativeTime(dateStr: string): string {
-  const date = new Date(dateStr);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMins / 60);
-  const diffDays = Math.floor(diffHours / 24);
-
-  if (diffMins < 1) return "just now";
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  if (diffDays < 7) return `${diffDays}d ago`;
-  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-}
-
-function SessionContextMenu({
-  session,
-  onClose,
-  onStar,
-  onArchive,
-  onSoftDelete,
-  onHardDelete,
-  onRename,
-}: {
-  session: IChatSessionResponse;
-  onClose: () => void;
-  onStar: () => void;
-  onArchive: () => void;
-  onSoftDelete: () => void;
-  onHardDelete: () => void;
-  onRename: () => void;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        onClose();
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [onClose]);
-
-  const items = [
-    {
-      label: "Rename",
-      icon: <PenLine size={13} />,
-      action: () => {
-        onRename();
-        onClose();
-      },
-      className: "text-gray-700 dark:text-gray-300",
-    },
-    {
-      label: session.isStarred ? "Unstar" : "Star",
-      icon: session.isStarred ? <StarOff size={13} /> : <Star size={13} />,
-      action: () => {
-        onStar();
-        onClose();
-      },
-      className: "text-gray-700 dark:text-gray-300",
-    },
-    {
-      label: "Archive",
-      icon: <Archive size={13} />,
-      action: () => {
-        onArchive();
-        onClose();
-      },
-      className: "text-gray-700 dark:text-gray-300",
-    },
-    {
-      label: "Delete",
-      icon: <Trash2 size={13} />,
-      action: () => {
-        onSoftDelete();
-        onClose();
-      },
-      className: "text-red-500 dark:text-red-400",
-    },
-    {
-      label: "Delete permanently",
-      icon: <Trash size={13} />,
-      action: () => {
-        onHardDelete();
-        onClose();
-      },
-      className: "text-red-600 dark:text-red-500 font-medium",
-    },
-  ];
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, scale: 0.95, y: -4 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95, y: -4 }}
-      transition={{ duration: 0.12 }}
-      className="absolute right-0 top-7 z-50 w-48 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-xl shadow-black/10 dark:shadow-black/40 overflow-hidden"
-    >
-      {items.map((item, i) => (
-        <button
-          key={i}
-          onClick={item.action}
-          className={`w-full flex items-center gap-2.5 px-3 py-2 text-xs hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-75 ${item.className} ${i === items.length - 2 ? "border-t border-gray-100 dark:border-gray-800 mt-0.5 pt-2" : ""}`}
-        >
-          {item.icon}
-          {item.label}
-        </button>
-      ))}
-    </motion.div>
-  );
-}
+import {
+  ActionMenu,
+  IconTrigger,
+} from "@/ui/navigations/action/Action.menu.ui";
+import type { ActionItem } from "@/ui/navigations/action/Action.menu.context";
 
 function SessionCard({
   session,
@@ -155,8 +45,45 @@ function SessionCard({
   onHardDelete: () => void;
   onRename: (id: string, currentTitle: string) => void;
 }) {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [hovered, setHovered] = useState(false);
+  const menuItems: ActionItem[] = [
+    {
+      id: "rename",
+      label: "Rename",
+      leadingIcon: <PenLine size={13} />,
+      onClick: () => onRename(session.id, session.title),
+    },
+    {
+      id: "star",
+      label: session.isStarred ? "Unstar" : "Star",
+      leadingIcon: session.isStarred ? (
+        <StarOff size={13} />
+      ) : (
+        <Star size={13} />
+      ),
+      onClick: onStar,
+    },
+    {
+      id: "archive",
+      label: "Archive",
+      leadingIcon: <Archive size={13} />,
+      onClick: onArchive,
+    },
+    {
+      id: "delete",
+      label: "Delete",
+      leadingIcon: <Trash2 size={13} />,
+      variant: "danger",
+      dividerBefore: true,
+      onClick: onSoftDelete,
+    },
+    {
+      id: "delete-permanent",
+      label: "Delete permanently",
+      leadingIcon: <Trash size={13} />,
+      variant: "danger",
+      onClick: onHardDelete,
+    },
+  ];
 
   return (
     <motion.div
@@ -166,10 +93,6 @@ function SessionCard({
       exit={{ opacity: 0, x: -8 }}
       transition={{ duration: 0.18 }}
       className="relative group"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => {
-        setHovered(false);
-      }}
     >
       <button
         onClick={onSelect}
@@ -189,8 +112,7 @@ function SessionCard({
               <MessageSquare size={14} />
             )}
           </div>
-
-          <div className="flex-1 min-w-0 pr-5">
+          <div className="flex-1 min-w-0 pr-6">
             <p
               className={`text-[13px] leading-snug truncate font-medium ${
                 isActive
@@ -200,65 +122,27 @@ function SessionCard({
             >
               {session.title}
             </p>
-            <div className="flex items-center gap-1.5 mt-0.5">
-              <span className="text-[11px] text-gray-400 dark:text-gray-500">
-                {formatRelativeTime(session.lastMessageAt)}
-              </span>
-              {session.messageCount > 0 && (
-                <>
-                  <span className="text-gray-300 dark:text-gray-700">·</span>
-                  <span className="text-[11px] text-gray-400 dark:text-gray-500">
-                    {session.messageCount} msg
-                    {session.messageCount !== 1 ? "s" : ""}
-                  </span>
-                </>
-              )}
-              {session.isStarred && (
-                <>
-                  <span className="text-gray-300 dark:text-gray-700">·</span>
-                  <Star size={10} className="text-amber-400 fill-amber-400" />
-                </>
-              )}
-            </div>
+            {session.isStarred && (
+              <Star size={10} className="mt-1 text-amber-400 fill-amber-400" />
+            )}
           </div>
         </div>
       </button>
 
-      <AnimatePresence>
-        {(hovered || menuOpen) && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.1 }}
-            className="absolute right-2 top-1/2 -translate-y-1/2"
-          >
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setMenuOpen((v) => !v);
-              }}
-              className="p-1 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-75"
-            >
-              <MoreHorizontal size={14} />
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {menuOpen && (
-          <SessionContextMenu
-            session={session}
-            onClose={() => setMenuOpen(false)}
-            onStar={onStar}
-            onArchive={onArchive}
-            onSoftDelete={onSoftDelete}
-            onHardDelete={onHardDelete}
-            onRename={() => onRename(session.id, session.title)}
-          />
-        )}
-      </AnimatePresence>
+      <div className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-100">
+        <ActionMenu
+          items={menuItems}
+          size="sm"
+          align="auto"
+          trigger={
+            <IconTrigger
+              size="sm"
+              variant="ghost"
+              icon={<MoreHorizontal size={14} />}
+            />
+          }
+        />
+      </div>
     </motion.div>
   );
 }
@@ -314,11 +198,11 @@ function RenameInput({
 
 function EmptyState({ label }: { label: string }) {
   return (
-    <div className="px-3 py-6 flex flex-col items-center gap-2">
+    <div className="flex flex-col items-center justify-center h-full gap-2 py-8">
       <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
         <MessageSquare size={14} className="text-gray-400 dark:text-gray-500" />
       </div>
-      <p className="text-[12px] text-gray-400 dark:text-gray-500 text-center leading-relaxed">
+      <p className="text-[12px] text-gray-400 dark:text-gray-500 text-center leading-relaxed px-4">
         {label}
       </p>
     </div>
@@ -401,9 +285,16 @@ export default function Recent() {
     setRenaming(null);
   }
 
+  const emptyLabel =
+    activeTab === "starred"
+      ? "No starred sessions yet."
+      : activeTab === "archived"
+        ? "Nothing archived."
+        : "No recent chats. Start a new one.";
+
   return (
-    <div className="flex flex-col w-full">
-      <div className="px-3 pt-3 pb-1">
+    <div className="flex flex-col w-full min-h-[50vh] max-h-[50vh]">
+      <div className="px-3 pt-3 pb-1 shrink-0">
         <div className="flex items-center gap-1 p-0.5 bg-gray-100 dark:bg-gray-800 rounded-lg">
           {tabs.map((tab) => (
             <button
@@ -421,7 +312,7 @@ export default function Recent() {
         </div>
       </div>
 
-      <div className="px-3 py-2 flex items-center justify-between">
+      <div className="px-3 py-2 flex items-center justify-between shrink-0">
         <span className="text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
           Recent
         </span>
@@ -435,72 +326,66 @@ export default function Recent() {
         )}
       </div>
 
-      <div className="flex flex-col gap-0.5 pb-2">
-        {isLoading ? (
-          <>
-            <SkeletonCard />
-            <SkeletonCard />
-            <SkeletonCard />
-            <SkeletonCard />
-          </>
-        ) : error ? (
-          <div className="px-3 py-3">
-            <p className="text-[12px] text-red-500 dark:text-red-400">
-              {error}
-            </p>
-            <button
-              onClick={() => fetchSessions()}
-              className="mt-1.5 text-[11px] text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 underline transition-colors"
-            >
-              Try again
-            </button>
-          </div>
-        ) : displayedSessions.length === 0 ? (
-          <EmptyState
-            label={
-              activeTab === "starred"
-                ? "No starred sessions yet."
-                : activeTab === "archived"
-                  ? "Nothing archived."
-                  : "No recent chats. Start a new one."
-            }
-          />
-        ) : (
-          <AnimatePresence mode="popLayout">
-            {displayedSessions.map((session) =>
-              renaming?.id === session.id ? (
-                <motion.div
-                  key={session.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                >
-                  <RenameInput
-                    initialValue={renaming.title}
-                    onSave={handleSaveRename}
-                    onCancel={() => setRenaming(null)}
+      <div className="flex-1 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-gray-200 dark:scrollbar-thumb-gray-700 scrollbar-track-transparent">
+        <div className="flex flex-col gap-0.5 pb-2">
+          {isLoading ? (
+            <>
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+            </>
+          ) : error ? (
+            <div className="px-3 py-3">
+              <p className="text-[12px] text-red-500 dark:text-red-400">
+                {error}
+              </p>
+              <button
+                onClick={() => fetchSessions()}
+                className="mt-1.5 text-[11px] text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 underline transition-colors"
+              >
+                Try again
+              </button>
+            </div>
+          ) : displayedSessions.length === 0 ? (
+            <EmptyState label={emptyLabel} />
+          ) : (
+            <AnimatePresence mode="popLayout">
+              {displayedSessions.map((session) =>
+                renaming?.id === session.id ? (
+                  <motion.div
+                    key={session.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <RenameInput
+                      initialValue={renaming.title}
+                      onSave={handleSaveRename}
+                      onCancel={() => setRenaming(null)}
+                    />
+                  </motion.div>
+                ) : (
+                  <SessionCard
+                    key={session.id}
+                    session={session}
+                    isActive={session.id === currentSessionId}
+                    onSelect={() => handleSelect(session)}
+                    onStar={() => handleStar(session)}
+                    onArchive={() => archiveSession(session.id)}
+                    onSoftDelete={() => softDeleteSession(session.id)}
+                    onHardDelete={() => hardDeleteSession(session.id)}
+                    onRename={(id, title) => setRenaming({ id, title })}
                   />
-                </motion.div>
-              ) : (
-                <SessionCard
-                  key={session.id}
-                  session={session}
-                  isActive={session.id === currentSessionId}
-                  onSelect={() => handleSelect(session)}
-                  onStar={() => handleStar(session)}
-                  onArchive={() => archiveSession(session.id)}
-                  onSoftDelete={() => softDeleteSession(session.id)}
-                  onHardDelete={() => hardDeleteSession(session.id)}
-                  onRename={(id, title) => setRenaming({ id, title })}
-                />
-              ),
-            )}
-          </AnimatePresence>
-        )}
+                ),
+              )}
+            </AnimatePresence>
+          )}
+        </div>
       </div>
 
       {displayedSessions.length > 0 && !isLoading && (
-        <div className="px-3 pb-2">
+        <div className="px-3 py-2 shrink-0 border-t border-gray-100 dark:border-gray-800">
           <div className="flex items-center gap-1 text-[11px] text-gray-400 dark:text-gray-600">
             <Clock size={10} />
             <span>
