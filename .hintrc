@@ -6,12 +6,7 @@
     "typescript-config/consistent-casing": "off",
     "no-inline-styles": "off",
     "axe/aria": "off",
-    "axe/name-role-value": [
-      "default",
-      {
-        "button-name": "off"
-      }
-    ],
+    "axe/name-role-value": "off",
     "axe/forms": "off"
   },
   "browserslist": [

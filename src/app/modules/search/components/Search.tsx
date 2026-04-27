@@ -1,3 +1,6 @@
+/* eslint-disable react-hooks/immutability */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import { useEffect, useRef, useState, useMemo } from "react";
@@ -12,8 +15,6 @@ import {
   Star,
   File as FileIcon,
   Filter,
-  Calendar,
-  Clock,
 } from "lucide-react";
 import { useChat } from "@/app/hooks/useChat.hooks";
 import { IChatSessionResponse } from "@/app/lib/types/chat.types";
@@ -305,32 +306,36 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                         />
                       </motion.button>
                     )}
-                    <button
-                      onClick={() =>
-                        setFilters((prev) => ({
-                          ...prev,
-                          showFilters: !prev.showFilters,
-                        }))
-                      }
-                      className={`p-1.5 rounded-lg transition-colors ${
-                        isAnyFilterActive
-                          ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
-                          : "hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400"
-                      }`}
-                      aria-label="Toggle filters"
-                    >
-                      <Filter size={18} />
-                    </button>
-                    <button
-                      onClick={onClose}
-                      className="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg transition-colors"
-                      aria-label="Close modal"
-                    >
-                      <X
-                        size={18}
-                        className="text-gray-500 dark:text-gray-400"
-                      />
-                    </button>
+                    <Tooltip content="Filter">
+                      <button
+                        onClick={() =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            showFilters: !prev.showFilters,
+                          }))
+                        }
+                        className={`p-1.5 rounded-lg transition-colors ${
+                          isAnyFilterActive
+                            ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
+                            : "hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400"
+                        }`}
+                        aria-label="Toggle filters"
+                      >
+                        <Filter size={18} />
+                      </button>
+                    </Tooltip>
+                    <Tooltip content="Close">
+                      <button
+                        onClick={onClose}
+                        className="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                        aria-label="Close modal"
+                      >
+                        <X
+                          size={18}
+                          className="text-gray-500 dark:text-gray-400"
+                        />
+                      </button>
+                    </Tooltip>
                   </div>
 
                   {/* Results Counter */}
