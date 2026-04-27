@@ -1,15 +1,15 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 
-const selectMessageState = (state: RootState) => state.messages;
+const selectMessageState = (state: RootState) => state.message;
 
-export const selectMessages = (state: RootState) => state.messages.messages;
-export const selectCurrentMessage = (state: RootState) => state.messages.currentMessage;
-export const selectMessagePagination = (state: RootState) => state.messages.pagination;
-export const selectMessageIsLoading = (state: RootState) => state.messages.isLoading;
-export const selectMessageIsFetchingOne = (state: RootState) => state.messages.isFetchingOne;
-export const selectMessageIsDeleting = (state: RootState) => state.messages.isDeleting;
-export const selectMessageError = (state: RootState) => state.messages.error;
+export const selectMessages = (state: RootState) => state.message.messages;
+export const selectCurrentMessage = (state: RootState) => state.message.currentMessage;
+export const selectMessagePagination = (state: RootState) => state.message.pagination;
+export const selectMessageIsLoading = (state: RootState) => state.message.isLoading;
+export const selectMessageIsFetchingOne = (state: RootState) => state.message.isFetchingOne;
+export const selectMessageIsDeleting = (state: RootState) => state.message.isDeleting;
+export const selectMessageError = (state: RootState) => state.message.error;
 
 export const selectUserMessages = createSelector(selectMessages, (messages) =>
     messages.filter((m) => m.type === "user_question")

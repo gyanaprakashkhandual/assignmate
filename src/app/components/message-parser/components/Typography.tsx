@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React from "react";
-import { Check, Square } from "lucide-react";
+import { Check } from "lucide-react";
 import {
   BlockquoteProps,
   HorizontalRuleProps,
@@ -10,7 +10,6 @@ import {
   ListItemProps,
   TaskListProps,
 } from "../types";
-import { renderInline } from "../utils/inline";
 
 export function Blockquote({ children, className = "" }: BlockquoteProps) {
   return (
@@ -24,7 +23,9 @@ export function Blockquote({ children, className = "" }: BlockquoteProps) {
 
 export function HorizontalRule({ className = "" }: HorizontalRuleProps) {
   return (
-    <hr className={`my-6 border-0 border-t border-gray-200 dark:border-gray-700 ${className}`} />
+    <hr
+      className={`my-6 border-0 border-t border-gray-200 dark:border-gray-700 ${className}`}
+    />
   );
 }
 
@@ -38,7 +39,7 @@ const headingStyles = {
 };
 
 export function Heading({ level, children, id, className = "" }: HeadingProps) {
-  const Tag = `h${level}` as keyof JSX.IntrinsicElements;
+  const Tag = `h${level}` as any;
   return (
     <Tag id={id} className={`${headingStyles[level]} ${className}`}>
       {children}
@@ -48,13 +49,20 @@ export function Heading({ level, children, id, className = "" }: HeadingProps) {
 
 export function Paragraph({ children, className = "" }: ParagraphProps) {
   return (
-    <p className={`text-sm leading-relaxed text-gray-800 dark:text-gray-200 my-3 first:mt-0 last:mb-0 ${className}`}>
+    <p
+      className={`text-sm leading-relaxed text-gray-800 dark:text-gray-200 my-3 first:mt-0 last:mb-0 ${className}`}
+    >
       {children}
     </p>
   );
 }
 
-export function List({ ordered, children, start = 1, className = "" }: ListProps) {
+export function List({
+  ordered,
+  children,
+  start = 1,
+  className = "",
+}: ListProps) {
   if (ordered) {
     return (
       <ol
@@ -66,21 +74,23 @@ export function List({ ordered, children, start = 1, className = "" }: ListProps
     );
   }
   return (
-    <ul className={`my-3 pl-6 space-y-1 list-disc marker:text-gray-400 dark:marker:text-gray-600 text-sm text-gray-800 dark:text-gray-200 ${className}`}>
+    <ul
+      className={`my-3 pl-6 space-y-1 list-disc marker:text-gray-400 dark:marker:text-gray-600 text-sm text-gray-800 dark:text-gray-200 ${className}`}
+    >
       {children}
     </ul>
   );
 }
 
 export function ListItem({ children, className = "" }: ListItemProps) {
-  return (
-    <li className={`leading-relaxed ${className}`}>
-      {children}
-    </li>
-  );
+  return <li className={`leading-relaxed ${className}`}>{children}</li>;
 }
 
-export function TaskList({ items, className = "", classNames = {} }: TaskListProps) {
+export function TaskList({
+  items,
+  className = "",
+  classNames = {},
+}: TaskListProps) {
   return (
     <ul className={`my-3 space-y-2 ${classNames.taskList ?? ""} ${className}`}>
       {items.map((item, i) => (
@@ -95,9 +105,17 @@ export function TaskList({ items, className = "", classNames = {} }: TaskListPro
                 : "border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900"
             } ${classNames.taskCheckbox ?? ""}`}
           >
-            {item.checked && <Check size={10} className="text-white dark:text-black" strokeWidth={3} />}
+            {item.checked && (
+              <Check
+                size={10}
+                className="text-white dark:text-black"
+                strokeWidth={3}
+              />
+            )}
           </span>
-          <span className={`leading-relaxed flex-1 ${item.checked ? "line-through text-gray-400 dark:text-gray-600" : "text-gray-800 dark:text-gray-200"}`}>
+          <span
+            className={`leading-relaxed flex-1 ${item.checked ? "line-through text-gray-400 dark:text-gray-600" : "text-gray-800 dark:text-gray-200"}`}
+          >
             {item.content}
           </span>
         </li>

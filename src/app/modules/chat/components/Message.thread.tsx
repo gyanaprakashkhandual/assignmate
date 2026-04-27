@@ -1,76 +1,78 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, User, Clock, Loader2 } from "lucide-react";
-import { useChat } from "@/app/hooks/useChat.hooks";
-import { IChatMessageResponse } from "@/app/lib/types/chat.types";
+import { Loader2, User, Sparkles } from "lucide-react";
+import { useMessage } from "@/app/hooks/useMessage.hooks";
+import { MessageParser } from "@/app/components/message-parser/core/Parser.core";
+import { IMessageResponse } from "@/app/lib/types/message.types";
+import { useAuth } from "@/app/context/Auth.context";
 
 interface MessageThreadProps {
   sessionId: string;
 }
 
-// ── Individual message bubble ─────────────────────────────────────────────────
-function MessageBubble({
-  message,
-  index,
-}: {
-  message: IChatMessageResponse;
-  index: number;
-}) {
-  const isUser = message.type === "user_question";
-  const time = new Date(message.metadata.timestamp).toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-
+function UserBubble({ message }: { message: IMessageResponse }) {
+  const { user } = useAuth();
   return (
     <motion.div
-      initial={{ opacity: 0, y: 18 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, delay: index * 0.04, ease: "easeOut" }}
-      className={`flex gap-3 ${isUser ? "flex-row-reverse" : "flex-row"}`}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+      className="flex justify-end px-4 py-1.5 md:px-6"
     >
-      {/* Avatar */}
-      <div
-        className={`mt-1 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full ${
-          isUser
-            ? "bg-black text-white dark:bg-white dark:text-black"
-            : "border border-black/10 bg-white text-black dark:border-white/10 dark:bg-zinc-800 dark:text-white"
-        }`}
-      >
-        {isUser ? (
-          <User size={14} strokeWidth={2} />
-        ) : (
-          <Sparkles size={14} strokeWidth={1.5} />
-        )}
-      </div>
-
-      {/* Bubble */}
-      <div className={`max-w-[78%] ${isUser ? "items-end" : "items-start"} flex flex-col gap-1`}>
-        <div
-          className={`rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-            isUser
-              ? "rounded-tr-sm bg-black text-white dark:bg-white dark:text-black"
-              : "rounded-tl-sm border border-black/8 bg-white text-black shadow-sm dark:border-white/8 dark:bg-zinc-900 dark:text-white"
-          }`}
-          style={{ fontFamily: isUser ? "inherit" : "'Georgia', serif" }}
-        >
-          {message.content}
+      <div className="flex max-w-[75%] items-end gap-2.5">
+        <div className="rounded-2xl rounded-br-sm bg-black px-4 py-2.5 dark:bg-white">
+          <p className="text-sm leading-relaxed text-white dark:text-black">
+            {message.content}
+          </p>
         </div>
+        <div className="rounded-2xl rounded-br-sm px-4 py-2.5 dark:bg-white">
+          <span>
+            {user?.avatar ? (
+              <img
+                src={user.avatar}
+                alt={user.name}
+                className="w-8 h-8 rounded-full object-cover shrink-0"
+              />
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center shrink-0">
+                <User className="w-3 h-3 text-zinc-500" />
+              </div>
+            )}
+          </span>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
-        {/* Timestamp */}
-        <div
-          className={`flex items-center gap-1 text-[10px] text-black/35 dark:text-white/30 ${
-            isUser ? "flex-row-reverse" : ""
-          }`}
-        >
-          <Clock size={10} />
-          <span>{time}</span>
-          {message.metadata.processingTimeMs && !isUser && (
-            <span className="ml-1 text-black/25 dark:text-white/20">
-              · {(message.metadata.processingTimeMs / 1000).toFixed(1)}s
-            </span>
+function AiBubble({ message }: { message: IMessageResponse }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25, ease: "easeOut", delay: 0.05 }}
+      className="flex justify-start px-4 py-1.5 md:px-6"
+    >
+      <div className="flex max-w-[82%] items-start gap-2.5">
+        <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-black/5 dark:bg-white/8">
+          <Sparkles size={13} className="text-black/50 dark:text-white/50" />
+        </div>
+        <div className="min-w-0 rounded-2xl rounded-bl-sm bg-white px-4 py-3 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-800 dark:ring-white/[0.06]">
+          <MessageParser
+            content={message.content}
+            streaming={false}
+            className="text-sm text-black/80 dark:text-white/80"
+          />
+          {message.metadata?.processingTimeMs && (
+            <p className="mt-2 text-[10px] text-black/25 dark:text-white/25">
+              {(message.metadata.processingTimeMs / 1000).toFixed(2)}s
+              {message.metadata.tokensUsed
+                ? ` · ${message.metadata.tokensUsed} tokens`
+                : ""}
+            </p>
           )}
         </div>
       </div>
@@ -78,103 +80,91 @@ function MessageBubble({
   );
 }
 
-// ── Typing indicator ──────────────────────────────────────────────────────────
-function TypingIndicator() {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 12 }}
-      className="flex gap-3"
-    >
-      <div className="mt-1 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-black/10 bg-white text-black dark:border-white/10 dark:bg-zinc-800 dark:text-white">
-        <Sparkles size={14} strokeWidth={1.5} />
-      </div>
-      <div className="rounded-2xl rounded-tl-sm border border-black/8 bg-white px-4 py-3.5 shadow-sm dark:border-white/8 dark:bg-zinc-900">
-        <div className="flex items-center gap-1.5">
-          {[0, 1, 2].map((i) => (
-            <motion.span
-              key={i}
-              className="h-1.5 w-1.5 rounded-full bg-black/40 dark:bg-white/40"
-              animate={{ opacity: [0.3, 1, 0.3], y: [0, -3, 0] }}
-              transition={{
-                duration: 1,
-                repeat: Infinity,
-                delay: i * 0.18,
-                ease: "easeInOut",
-              }}
-            />
-          ))}
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
-// ── Empty state ───────────────────────────────────────────────────────────────
-function EmptyState() {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="flex flex-1 flex-col items-center justify-center gap-4 py-16 text-center"
-    >
-      <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-black/8 bg-white shadow-sm dark:border-white/8 dark:bg-zinc-900">
-        <Sparkles size={22} className="text-black/40 dark:text-white/40" strokeWidth={1.5} />
-      </div>
-      <div>
-        <p className="text-sm font-medium text-black/60 dark:text-white/60">
-          Start your assignment
-        </p>
-        <p className="mt-1 text-xs text-black/35 dark:text-white/30">
-          Type a question or topic below
-        </p>
-      </div>
-    </motion.div>
-  );
-}
-
-// ── Main component ────────────────────────────────────────────────────────────
 export default function MessageThread({ sessionId }: MessageThreadProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
-  const { messages, isSendingMessage, isLoading, getSession } = useChat();
 
-  // Load session on mount
+  const { getBySession, sortedMessages, isLoading, error, hasMessages } =
+    useMessage();
+
+  // Fetch messages when sessionId changes
   useEffect(() => {
-    if (sessionId) getSession(sessionId);
+    if (sessionId) {
+      getBySession({ sessionId });
+    }
   }, [sessionId]);
 
-  // Scroll to bottom on new messages
+  // Auto-scroll to bottom when messages update
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isSendingMessage]);
+  }, [sortedMessages.length]);
 
-  if (isLoading && messages.length === 0) {
+  // ── Loading state ────────────────────────────────────────────────────
+  if (isLoading && !hasMessages) {
     return (
-      <div className="flex flex-1 items-center justify-center">
-        <Loader2 size={22} className="animate-spin text-black/30 dark:text-white/30" />
+      <div className="flex h-full items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2
+            size={20}
+            className="animate-spin text-black/25 dark:text-white/25"
+          />
+          <p className="text-xs text-black/35 dark:text-white/35">
+            Loading messages…
+          </p>
+        </div>
       </div>
     );
   }
 
-  return (
-    <div className="flex flex-1 flex-col overflow-hidden">
-      <div className="flex-1 overflow-y-auto px-4 py-6 md:px-6">
-        {messages.length === 0 ? (
-          <EmptyState />
-        ) : (
-          <div className="mx-auto flex max-w-2xl flex-col gap-5">
-            <AnimatePresence initial={false}>
-              {messages.map((msg, i) => (
-                <MessageBubble key={msg.id} message={msg} index={i} />
-              ))}
+  // ── Error state ──────────────────────────────────────────────────────
+  if (error) {
+    return (
+      <div className="flex h-full items-center justify-center px-6">
+        <p className="text-center text-sm text-red-500/70">{error}</p>
+      </div>
+    );
+  }
 
-              {isSendingMessage && (
-                <TypingIndicator key="typing" />
-              )}
-            </AnimatePresence>
-          </div>
-        )}
+  // ── Empty state ──────────────────────────────────────────────────────
+  if (!hasMessages) {
+    return (
+      <div className="flex h-full items-center justify-center px-6">
+        <div className="flex flex-col items-center gap-2 text-center">
+          <Sparkles size={22} className="text-black/20 dark:text-white/20" />
+          <p className="text-sm text-black/35 dark:text-white/35">
+            No messages yet. Start the conversation.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Group messages into user/ai pairs ────────────────────────────────
+  const pairs: { user?: IMessageResponse; ai?: IMessageResponse }[] = [];
+
+  sortedMessages.forEach((msg) => {
+    if (msg.type === "user_question") {
+      pairs.push({ user: msg });
+    } else if (msg.type === "ai_answer") {
+      const last = pairs[pairs.length - 1];
+      if (last && !last.ai) {
+        last.ai = msg;
+      } else {
+        pairs.push({ ai: msg });
+      }
+    }
+  });
+
+  return (
+    <div className="h-full overflow-y-auto">
+      <div className="mx-auto max-w-2xl py-6">
+        <AnimatePresence initial={false}>
+          {pairs.map((pair, idx) => (
+            <div key={idx} className="mb-2">
+              {pair.user && <UserBubble message={pair.user} />}
+              {pair.ai && <AiBubble message={pair.ai} />}
+            </div>
+          ))}
+        </AnimatePresence>
         <div ref={bottomRef} />
       </div>
     </div>

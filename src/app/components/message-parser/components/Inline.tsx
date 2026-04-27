@@ -1,3 +1,4 @@
+/* eslint-disable react/no-children-prop */
 import React from "react";
 import { MessageParserClassNames, MessageParserComponents } from "../types";
 
@@ -204,11 +205,11 @@ function renderInlineNodes(
       case "code": {
         const IC = components.InlineCode;
         if (IC)
-          return React.createElement(
-            IC,
-            { key, className: classNames.inlineCode },
-            node.value,
-          );
+          return React.createElement(IC, {
+            key,
+            className: classNames.inlineCode,
+            children: node.value,
+          });
         return React.createElement(
           "code",
           {
@@ -231,6 +232,7 @@ function renderInlineNodes(
               href: node.href,
               external: isExternal,
               className: classNames.link,
+              children,
             },
             ...children,
           );
@@ -301,11 +303,11 @@ function renderInlineNodes(
       case "badge": {
         const BC = components.Badge;
         if (BC)
-          return React.createElement(
-            BC,
-            { key, className: classNames.badge },
-            node.value,
-          );
+          return React.createElement(BC, {
+            key,
+            className: classNames.badge,
+            children: node.value,
+          });
         return React.createElement(
           "span",
           {
@@ -319,11 +321,12 @@ function renderInlineNodes(
       case "button": {
         const BtnC = components.Button;
         if (BtnC)
-          return React.createElement(
-            BtnC,
-            { key, href: node.href, className: classNames.button },
-            node.value,
-          );
+          return React.createElement(BtnC, {
+            key,
+            href: node.href,
+            className: classNames.button,
+            children: node.value,
+          });
         const El = node.href ? "a" : "button";
         return React.createElement(
           El,

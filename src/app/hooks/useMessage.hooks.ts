@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "../lib/hooks";
 import {

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import React from "react";
 import { ExternalLink } from "lucide-react";
@@ -25,7 +26,13 @@ export function Link({ href, children, external, className = "" }: LinkProps) {
   );
 }
 
-export function Image({ src, alt = "", title, className = "", classNames = {} }: ImageProps) {
+export function Image({
+  src,
+  alt = "",
+  title,
+  className = "",
+  classNames = {},
+}: ImageProps) {
   return (
     <span className={`block my-4 ${classNames.imageWrapper ?? ""}`}>
       <img
@@ -45,14 +52,22 @@ export function Image({ src, alt = "", title, className = "", classNames = {} }:
 }
 
 const badgeVariants = {
-  default: "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700",
-  success: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800",
-  warning: "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800",
-  error: "bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800",
+  default:
+    "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700",
+  success:
+    "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800",
+  warning:
+    "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800",
+  error:
+    "bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800",
   info: "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800",
 };
 
-export function Badge({ children, variant = "default", className = "" }: BadgeProps) {
+export function Badge({
+  children,
+  variant = "default",
+  className = "",
+}: BadgeProps) {
   return (
     <span
       className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border ${badgeVariants[variant]} ${className}`}
@@ -63,12 +78,21 @@ export function Badge({ children, variant = "default", className = "" }: BadgePr
 }
 
 const buttonVariants = {
-  primary: "bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-100 border-transparent",
-  secondary: "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-700",
-  ghost: "bg-transparent text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 border-gray-200 dark:border-gray-700",
+  primary:
+    "bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-100 border-transparent",
+  secondary:
+    "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-700",
+  ghost:
+    "bg-transparent text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 border-gray-200 dark:border-gray-700",
 };
 
-export function Button({ children, href, onClick, variant = "primary", className = "" }: ButtonProps) {
+export function Button({
+  children,
+  href,
+  onClick,
+  variant = "primary",
+  className = "",
+}: ButtonProps) {
   const base = `inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-sm font-medium border transition-colors duration-150 ${buttonVariants[variant]} ${className}`;
   if (href) {
     return (

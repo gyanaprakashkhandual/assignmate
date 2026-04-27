@@ -2,7 +2,7 @@
 import React, { useState, useCallback } from "react";
 import { Copy, Check } from "lucide-react";
 import { TableProps } from "../types";
-import { renderInline } from "../utils/inline";
+import { renderInline } from "./Inline";
 
 export function Table({
   headers,

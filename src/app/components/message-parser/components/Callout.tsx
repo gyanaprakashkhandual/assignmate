@@ -1,6 +1,13 @@
 "use client";
 import React from "react";
-import { Info, AlertTriangle, XCircle, CheckCircle, StickyNote, Lightbulb } from "lucide-react";
+import {
+  Info,
+  AlertTriangle,
+  XCircle,
+  CheckCircle,
+  StickyNote,
+  Lightbulb,
+} from "lucide-react";
 import { CalloutProps } from "../types";
 
 const calloutConfig = {
@@ -54,7 +61,13 @@ const calloutConfig = {
   },
 };
 
-export function Callout({ type, title, children, className = "", classNames = {} }: CalloutProps) {
+export function Callout({
+  type,
+  title,
+  children,
+  className = "",
+  classNames = {},
+}: CalloutProps) {
   const config = calloutConfig[type] ?? calloutConfig.info;
   const Icon = config.icon;
 
@@ -66,11 +79,15 @@ export function Callout({ type, title, children, className = "", classNames = {}
         <Icon size={16} className={`mt-0.5 shrink-0 ${config.iconColor}`} />
         <div className="flex-1 min-w-0">
           {title && (
-            <p className={`text-sm font-semibold mb-1 ${config.titleColor} ${classNames.calloutTitle ?? ""}`}>
+            <p
+              className={`text-sm font-semibold mb-1 ${config.titleColor} ${classNames.calloutTitle ?? ""}`}
+            >
               {title}
             </p>
           )}
-          <div className={`text-sm leading-relaxed ${config.bodyColor} ${classNames.calloutBody ?? ""}`}>
+          <div
+            className={`text-sm leading-relaxed ${config.bodyColor} ${classNames.calloutBody ?? ""}`}
+          >
             {children}
           </div>
         </div>
