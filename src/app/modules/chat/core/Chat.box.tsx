@@ -79,10 +79,10 @@ export default function ChatBox({
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-        className="relative flex items-end gap-3 rounded-2xl border border-black/10 bg-white p-3"
+        className="relative flex items-end gap-3 rounded-2xl border border-black/10 bg-white p-3 dark:border-white/10 dark:bg-zinc-900"
       >
         <div className="mb-1 shrink-0 text-black/25 dark:text-white/25">
-          <BrandIcon size={18} className="text-black" />
+          <BrandIcon size={18} className="text-black dark:text-white" />
         </div>
 
         <textarea
@@ -95,29 +95,29 @@ export default function ChatBox({
           className="max-h-50 flex-1 resize-none bg-transparent text-sm leading-relaxed text-black outline-none placeholder:text-black/35 dark:text-white dark:placeholder:text-white/30"
           disabled={isBusy}
         />
-        <motion.button
-          onClick={handleSend}
-          disabled={!canSend}
-          whileTap={canSend ? { scale: 0.93 } : {}}
-          className={`mb-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-xl transition-all duration-200 ${
-            canSend
-              ? "bg-black text-white shadow-sm hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-100"
-              : "bg-black/8 text-black/30 dark:bg-white/10 dark:text-white/30"
-          }`}
-          aria-label="Send message"
-        >
-          <AnimatePresence mode="wait">
-            {isBusy ? (
-              <motion.span
-                key="loader"
-                initial={{ opacity: 0, scale: 0.7 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.7 }}
-              >
-                <Loader2 size={15} className="animate-spin" />
-              </motion.span>
-            ) : (
-              <Tooltip content="Send" showArrow>
+        <Tooltip content="Send" showArrow position="top">
+          <motion.button
+            onClick={handleSend}
+            disabled={!canSend}
+            whileTap={canSend ? { scale: 0.93 } : {}}
+            className={`mb-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-xl transition-all duration-200 ${
+              canSend
+                ? "bg-black text-white shadow-sm hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-100"
+                : "bg-black/8 text-black/30 dark:bg-white/10 dark:text-white/30"
+            }`}
+            aria-label="Send message"
+          >
+            <AnimatePresence mode="wait">
+              {isBusy ? (
+                <motion.span
+                  key="loader"
+                  initial={{ opacity: 0, scale: 0.7 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.7 }}
+                >
+                  <Loader2 size={15} className="animate-spin" />
+                </motion.span>
+              ) : (
                 <motion.span
                   key="send"
                   initial={{ opacity: 0, scale: 0.7 }}
@@ -126,10 +126,10 @@ export default function ChatBox({
                 >
                   <Send size={12} />
                 </motion.span>
-              </Tooltip>
-            )}
-          </AnimatePresence>
-        </motion.button>
+              )}
+            </AnimatePresence>
+          </motion.button>
+        </Tooltip>
       </motion.div>
     </div>
   );
