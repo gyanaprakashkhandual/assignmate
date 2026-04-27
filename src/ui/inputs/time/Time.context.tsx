@@ -1,5 +1,4 @@
-/* eslint-disable react-refresh/only-export-components */
-'use client'
+"use client";
 import React, {
   createContext,
   useContext,
@@ -15,6 +14,7 @@ export type DropdownPosition =
   | "bottom-right"
   | "top-left"
   | "top-right";
+export type CalendarView = "date" | "month" | "year";
 
 export interface DateTimeValue {
   date: string;
@@ -25,6 +25,7 @@ export interface PickerState {
   dateValue: string;
   timeValue: string;
   openPicker: "date" | "time" | null;
+  calendarView: CalendarView;
   viewYear: number;
   viewMonth: number;
   isDisabled: boolean;
@@ -36,6 +37,7 @@ export interface PickerState {
   disabledDates: string[];
   disabledDaysOfWeek: number[];
   dropdownPosition: DropdownPosition | "auto";
+  inputFocused: boolean;
 }
 
 type PickerAction =
@@ -46,11 +48,15 @@ type PickerAction =
   | { type: "SET_VIEW_MONTH"; payload: number }
   | { type: "PREV_MONTH" }
   | { type: "NEXT_MONTH" }
+  | { type: "PREV_YEAR" }
+  | { type: "NEXT_YEAR" }
+  | { type: "SET_CALENDAR_VIEW"; payload: CalendarView }
   | { type: "CLEAR" }
   | { type: "CLEAR_DATE" }
   | { type: "CLEAR_TIME" }
   | { type: "SET_DISABLED"; payload: boolean }
-  | { type: "SET_READONLY"; payload: boolean };
+  | { type: "SET_READONLY"; payload: boolean }
+  | { type: "SET_INPUT_FOCUSED"; payload: boolean };
 
 function pickerReducer(state: PickerState, action: PickerAction): PickerState {
   switch (action.type) {
@@ -74,6 +80,12 @@ function pickerReducer(state: PickerState, action: PickerAction): PickerState {
         return { ...state, viewMonth: 0, viewYear: state.viewYear + 1 };
       return { ...state, viewMonth: state.viewMonth + 1 };
     }
+    case "PREV_YEAR":
+      return { ...state, viewYear: state.viewYear - 1 };
+    case "NEXT_YEAR":
+      return { ...state, viewYear: state.viewYear + 1 };
+    case "SET_CALENDAR_VIEW":
+      return { ...state, calendarView: action.payload };
     case "CLEAR":
       return { ...state, dateValue: "", timeValue: "", openPicker: null };
     case "CLEAR_DATE":
@@ -84,6 +96,8 @@ function pickerReducer(state: PickerState, action: PickerAction): PickerState {
       return { ...state, isDisabled: action.payload };
     case "SET_READONLY":
       return { ...state, isReadOnly: action.payload };
+    case "SET_INPUT_FOCUSED":
+      return { ...state, inputFocused: action.payload };
     default:
       return state;
   }
@@ -99,6 +113,9 @@ export interface DateTimeContextValue {
   closePicker: () => void;
   prevMonth: () => void;
   nextMonth: () => void;
+  prevYear: () => void;
+  nextYear: () => void;
+  setCalendarView: (view: CalendarView) => void;
   clear: () => void;
   clearDate: () => void;
   clearTime: () => void;
@@ -153,6 +170,7 @@ export function DateTimeProvider({
     dateValue: defaultDate,
     timeValue: defaultTime,
     openPicker: null,
+    calendarView: "date",
     viewYear: parsedDefault?.getFullYear() ?? today.getFullYear(),
     viewMonth: parsedDefault?.getMonth() ?? today.getMonth(),
     isDisabled: disabled,
@@ -164,6 +182,7 @@ export function DateTimeProvider({
     disabledDates,
     disabledDaysOfWeek,
     dropdownPosition,
+    inputFocused: false,
   };
 
   const [state, dispatch] = useReducer(pickerReducer, initialState);
@@ -190,6 +209,7 @@ export function DateTimeProvider({
   const openDatePicker = useCallback(() => {
     if (state.isDisabled || state.isReadOnly) return;
     dispatch({ type: "SET_OPEN_PICKER", payload: "date" });
+    dispatch({ type: "SET_CALENDAR_VIEW", payload: "date" });
   }, [state.isDisabled, state.isReadOnly]);
 
   const openTimePicker = useCallback(() => {
@@ -207,6 +227,18 @@ export function DateTimeProvider({
 
   const nextMonth = useCallback(() => {
     dispatch({ type: "NEXT_MONTH" });
+  }, []);
+
+  const prevYear = useCallback(() => {
+    dispatch({ type: "PREV_YEAR" });
+  }, []);
+
+  const nextYear = useCallback(() => {
+    dispatch({ type: "NEXT_YEAR" });
+  }, []);
+
+  const setCalendarView = useCallback((view: CalendarView) => {
+    dispatch({ type: "SET_CALENDAR_VIEW", payload: view });
   }, []);
 
   const clear = useCallback(() => {
@@ -246,6 +278,9 @@ export function DateTimeProvider({
         closePicker,
         prevMonth,
         nextMonth,
+        prevYear,
+        nextYear,
+        setCalendarView,
         clear,
         clearDate,
         clearTime,

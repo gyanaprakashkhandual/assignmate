@@ -300,7 +300,7 @@ export default function Recent() {
 
   return (
     <div className="flex flex-col w-full min-h-[48vh] max-h-[48vh]">
-      <div className="shrink-0">
+      <div className="shrink-0 pb-2">
         <div className="flex items-center gap-1 p-0.5 bg-gray-100 dark:bg-gray-800 rounded-lg">
           {tabs.map((tab) => (
             <button

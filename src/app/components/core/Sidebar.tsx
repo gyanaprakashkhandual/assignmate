@@ -1,7 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/static-components */
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import { useState, useEffect } from "react";
 import {
   Plus,
   Search,
@@ -23,6 +25,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/context/Auth.context";
 import Recent from "@/app/modules/chat/core/Recent.chat";
+import SearchModal from "@/app/modules/search/components/Search";
 import { FaEnvelopeOpenText } from "react-icons/fa6";
 
 export { useSidebarContext, SidebarProvider };
@@ -54,6 +57,24 @@ export default function Sidebar({
 }) {
   const router = useRouter();
   const { user } = useAuth();
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+
+  // Handle keyboard shortcut for search (Cmd+K or Ctrl+K)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setIsSearchModalOpen(true);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  const handleSearchClick = () => {
+    setIsSearchModalOpen(true);
+  };
 
   const sidebarItems: SidebarItem[] = [
     {
@@ -66,6 +87,7 @@ export default function Sidebar({
       id: "search",
       label: "Search",
       icon: <Search size={18} />,
+      onClick: handleSearchClick,
     },
     {
       id: "chats",
@@ -158,6 +180,12 @@ export default function Sidebar({
           headerClassName="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800"
           bodyClassName="bg-white dark:bg-gray-900"
           footerClassName="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800"
+        />
+
+        {/* Search Modal */}
+        <SearchModal
+          isOpen={isSearchModalOpen}
+          onClose={() => setIsSearchModalOpen(false)}
         />
       </div>
     </SidebarProvider>
