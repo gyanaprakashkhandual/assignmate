@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/static-components */
 /* eslint-disable @next/next/no-img-element */
 "use client";
@@ -10,8 +9,9 @@ import {
   MessageCircle,
   Download,
   Settings,
-  Monitor,
   User2,
+  Sun,
+  Moon,
 } from "lucide-react";
 import {
   SidebarProvider,
@@ -24,6 +24,7 @@ import {
 } from "../../../ui/navigations/sidebar/Sidebar.ui";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/context/Auth.context";
+import { useTheme } from "@/app/context/Theme.context";
 import Recent from "@/app/modules/chat/core/Recent.chat";
 import SearchModal from "@/app/modules/search/components/Search";
 import { FaEnvelopeOpenText } from "react-icons/fa6";
@@ -57,9 +58,9 @@ export default function Sidebar({
 }) {
   const router = useRouter();
   const { user } = useAuth();
+  const { theme, setTheme } = useTheme();
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
-  // Handle keyboard shortcut for search (Cmd+K or Ctrl+K)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
@@ -74,6 +75,16 @@ export default function Sidebar({
 
   const handleSearchClick = () => {
     setIsSearchModalOpen(true);
+  };
+
+  const cycleTheme = () => {
+    if (theme === "light") {
+      setTheme("dark");
+    } else if (theme === "dark") {
+      setTheme("system");
+    } else {
+      setTheme("light");
+    }
   };
 
   const sidebarItems: SidebarItem[] = [
@@ -143,11 +154,17 @@ export default function Sidebar({
   const CustomFooter = () => (
     <div className="space-y-2">
       <button
-        onClick={() => router.push("/download/desktop")}
+        onClick={cycleTheme}
         className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-100"
       >
-        <Monitor size={16} />
-        <span className="text-sm">Install Desktop Version</span>
+        {theme === "dark" ? <Moon size={16} /> : <Sun size={16} />}
+        <span className="text-sm">
+          {theme === "light"
+            ? "Light Theme"
+            : theme === "dark"
+              ? "Dark Theme"
+              : "System Theme"}
+        </span>
       </button>
     </div>
   );
@@ -182,7 +199,6 @@ export default function Sidebar({
           footerClassName="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800"
         />
 
-        {/* Search Modal */}
         <SearchModal
           isOpen={isSearchModalOpen}
           onClose={() => setIsSearchModalOpen(false)}

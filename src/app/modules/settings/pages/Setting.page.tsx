@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState } from "react";
@@ -10,12 +12,29 @@ import HandwritingSettings from "../components/Handwriting.setting";
 import SecuritySettings from "../components/Security.setting";
 import DangerSettings from "../components/Danger.setting";
 import ThemeSettings from "../components/Theme.setting";
-import { LogOut, Settings } from "lucide-react";
+import { LogOut, Settings, User } from "lucide-react";
+import { useConfirm } from "@/ui/overlay/confirm/Confirm.context";
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<SettingsTab>("profile");
   const { user, signOut } = useAuth();
   const { profile } = useProfile();
+
+  const { showConfirm } = useConfirm();
+
+  const handleSignOut = async () => {
+    const confirmed = await showConfirm({
+      title: "Sign Out",
+      message: "Are you sure you want to sign out?",
+      confirmText: "Sign Out",
+      cancelText: "Cancel",
+      type: "warning",
+    });
+
+    if (confirmed) {
+      signOut();
+    }
+  };
 
   const displayName =
     profile?.nickname || profile?.username || user?.name || "User";
@@ -42,26 +61,36 @@ export default function SettingsPage() {
                 Settings
               </h1>
               <p className="text-xs text-zinc-400 dark:text-zinc-500">
-                {user?.email}
+                {profile?.username}
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
             <div className="hidden sm:flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-black dark:bg-white flex items-center justify-center">
-                <span className="text-white dark:text-black font-bold text-sm">
-                  {initials}
+              <div className="w-8 h-8 rounded-full dark:bg-white flex items-center justify-center">
+                <span>
+                  {user?.avatar ? (
+                    <img
+                      src={user.avatar}
+                      alt={user.name}
+                      className="w-8 h-8 rounded-full object-cover shrink-0"
+                    />
+                  ) : (
+                    <div className="w-6 h-6 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center shrink-0">
+                      <User className="w-3 h-3 text-zinc-500" />
+                    </div>
+                  )}
                 </span>
               </div>
               <span className="text-sm font-medium text-black dark:text-white">
-                {displayName}
+                {user?.name}
               </span>
             </div>
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
-              onClick={signOut}
+              onClick={handleSignOut}
               className="flex items-center gap-2 px-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-700 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-600 hover:text-black dark:hover:text-white transition-colors"
             >
               <LogOut className="w-4 h-4" />
