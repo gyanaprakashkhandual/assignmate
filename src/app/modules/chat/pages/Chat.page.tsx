@@ -136,12 +136,12 @@ export default function ChatPage({ params }: ChatPageProps) {
 
                   {currentSession?.status !== "archived" && (
                     <Tooltip content="Archive session" showArrow position="top">
-                    <button
-                      onClick={() => archiveSession(sessionId)}
-                      className="flex h-7 w-7 items-center justify-center rounded-lg text-black/30 transition-colors hover:bg-black/6 hover:text-black dark:text-white/30 dark:hover:bg-white/[0.07] dark:hover:text-white"
-                    >
-                      <Archive size={13} strokeWidth={2} />
-                    </button>
+                      <button
+                        onClick={() => archiveSession(sessionId)}
+                        className="flex h-7 w-7 items-center justify-center rounded-lg text-black/30 transition-colors hover:bg-black/6 hover:text-black dark:text-white/30 dark:hover:bg-white/[0.07] dark:hover:text-white"
+                      >
+                        <Archive size={13} strokeWidth={2} />
+                      </button>
                     </Tooltip>
                   )}
                 </div>

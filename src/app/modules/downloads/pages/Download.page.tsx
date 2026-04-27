@@ -1,7 +1,13 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   FileText,
   Search,
@@ -15,10 +21,16 @@ import {
   Calendar,
   Clock,
   X,
-} from 'lucide-react';
-import { ActionMenu, IconTrigger } from '@/ui/navigations/action/Action.menu.ui';
-import type { ActionItem } from '@/ui/navigations/action/Action.menu.context';
-import { StandaloneDatePicker, StandaloneTimePicker } from '@/ui/inputs/time/Time.ui';
+} from "lucide-react";
+import {
+  ActionMenu,
+  IconTrigger,
+} from "@/ui/navigations/action/Action.menu.ui";
+import type { ActionItem } from "@/ui/navigations/action/Action.menu.context";
+import {
+  StandaloneDatePicker,
+  StandaloneTimePicker,
+} from "@/ui/inputs/time/Time.ui";
 
 interface PDFSession {
   _id: string;
@@ -42,14 +54,18 @@ interface FilterState {
 
 const ITEMS_PER_PAGE = 12;
 
-export default function PDFShowcase({ sessions = [] }: { sessions: PDFSession[] }) {
+export default function PDFShowcase({
+  sessions = [],
+}: {
+  sessions: PDFSession[];
+}) {
   const [currentPage, setCurrentPage] = useState(0);
   const [filters, setFilters] = useState<FilterState>({
-    search: '',
-    dateFrom: '',
-    dateTo: '',
-    timeFrom: '',
-    timeTo: '',
+    search: "",
+    dateFrom: "",
+    dateTo: "",
+    timeFrom: "",
+    timeTo: "",
     showDateFilter: false,
     showTimeFilter: false,
   });
@@ -99,13 +115,13 @@ export default function PDFShowcase({ sessions = [] }: { sessions: PDFSession[] 
     const sessionTimeMinutes = sessionHours * 60 + sessionMinutes;
 
     if (filters.timeFrom) {
-      const [fromHour, fromMinute] = filters.timeFrom.split(':').map(Number);
+      const [fromHour, fromMinute] = filters.timeFrom.split(":").map(Number);
       const fromTimeMinutes = fromHour * 60 + fromMinute;
       if (sessionTimeMinutes < fromTimeMinutes) return false;
     }
 
     if (filters.timeTo) {
-      const [toHour, toMinute] = filters.timeTo.split(':').map(Number);
+      const [toHour, toMinute] = filters.timeTo.split(":").map(Number);
       const toTimeMinutes = toHour * 60 + toMinute;
       if (sessionTimeMinutes > toTimeMinutes) return false;
     }
@@ -119,16 +135,20 @@ export default function PDFShowcase({ sessions = [] }: { sessions: PDFSession[] 
     if (filters.search.trim()) {
       const query = filters.search.toLowerCase();
       results = results.filter((session) =>
-        session.title.toLowerCase().includes(query)
+        session.title.toLowerCase().includes(query),
       );
     }
 
     if (filters.dateFrom || filters.dateTo) {
-      results = results.filter((session) => checkDateInRange(session.createdAt));
+      results = results.filter((session) =>
+        checkDateInRange(session.createdAt),
+      );
     }
 
     if (filters.timeFrom || filters.timeTo) {
-      results = results.filter((session) => checkTimeInRange(session.createdAt));
+      results = results.filter((session) =>
+        checkTimeInRange(session.createdAt),
+      );
     }
 
     return results;
@@ -137,25 +157,25 @@ export default function PDFShowcase({ sessions = [] }: { sessions: PDFSession[] 
   const totalPages = Math.ceil(filteredSessions.length / ITEMS_PER_PAGE);
   const paginatedSessions = filteredSessions.slice(
     currentPage * ITEMS_PER_PAGE,
-    (currentPage + 1) * ITEMS_PER_PAGE
+    (currentPage + 1) * ITEMS_PER_PAGE,
   );
 
   const handleNextPage = useCallback(() => {
     if (currentPage < totalPages - 1) {
       setCurrentPage((prev) => prev + 1);
-      scrollContainerRef.current?.scrollIntoView({ behavior: 'smooth' });
+      scrollContainerRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [currentPage, totalPages]);
 
   const handlePrevPage = useCallback(() => {
     if (currentPage > 0) {
       setCurrentPage((prev) => prev - 1);
-      scrollContainerRef.current?.scrollIntoView({ behavior: 'smooth' });
+      scrollContainerRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [currentPage]);
 
   const handleDownload = (session: PDFSession) => {
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = session.pdfUrl;
     link.download = `${session.title}.pdf`;
     document.body.appendChild(link);
@@ -171,31 +191,35 @@ export default function PDFShowcase({ sessions = [] }: { sessions: PDFSession[] 
       });
     } else {
       navigator.clipboard.writeText(session.pdfUrl);
-      alert('Link copied to clipboard');
+      alert("Link copied to clipboard");
     }
   };
 
   const handleViewPDF = (session: PDFSession) => {
-    window.open(session.pdfUrl, '_blank');
+    window.open(session.pdfUrl, "_blank");
   };
 
   const formatDate = (dateStr: string) => {
     try {
-      return new Date(dateStr).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
+      return new Date(dateStr).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
       });
     } catch {
-      return '';
+      return "";
     }
   };
 
-  const isAnyFilterActive = filters.dateFrom || filters.dateTo || filters.timeFrom || filters.timeTo;
+  const isAnyFilterActive =
+    filters.dateFrom || filters.dateTo || filters.timeFrom || filters.timeTo;
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
-      <div ref={scrollContainerRef} className="sticky top-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+      <div
+        ref={scrollContainerRef}
+        className="sticky top-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800"
+      >
         <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
@@ -206,7 +230,8 @@ export default function PDFShowcase({ sessions = [] }: { sessions: PDFSession[] 
                     PDF Library
                   </h1>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {filteredSessions.length} {filteredSessions.length === 1 ? 'document' : 'documents'}
+                    {filteredSessions.length}{" "}
+                    {filteredSessions.length === 1 ? "document" : "documents"}
                   </p>
                 </div>
               </div>
@@ -219,7 +244,10 @@ export default function PDFShowcase({ sessions = [] }: { sessions: PDFSession[] 
 
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1 relative">
-                <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none" />
+                <Search
+                  size={18}
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none"
+                />
                 <input
                   type="text"
                   placeholder="Search PDFs..."
@@ -233,7 +261,7 @@ export default function PDFShowcase({ sessions = [] }: { sessions: PDFSession[] 
                 {filters.search && (
                   <button
                     onClick={() => {
-                      setFilters((prev) => ({ ...prev, search: '' }));
+                      setFilters((prev) => ({ ...prev, search: "" }));
                       setCurrentPage(0);
                     }}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
@@ -245,12 +273,15 @@ export default function PDFShowcase({ sessions = [] }: { sessions: PDFSession[] 
 
               <button
                 onClick={() =>
-                  setFilters((prev) => ({ ...prev, showDateFilter: !prev.showDateFilter }))
+                  setFilters((prev) => ({
+                    ...prev,
+                    showDateFilter: !prev.showDateFilter,
+                  }))
                 }
                 className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 ${
                   isAnyFilterActive || filters.showDateFilter
-                    ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800'
-                    : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
+                    ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800"
+                    : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700"
                 }`}
               >
                 <Calendar size={16} />
@@ -259,12 +290,15 @@ export default function PDFShowcase({ sessions = [] }: { sessions: PDFSession[] 
 
               <button
                 onClick={() =>
-                  setFilters((prev) => ({ ...prev, showTimeFilter: !prev.showTimeFilter }))
+                  setFilters((prev) => ({
+                    ...prev,
+                    showTimeFilter: !prev.showTimeFilter,
+                  }))
                 }
                 className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 ${
                   filters.timeFrom || filters.timeTo || filters.showTimeFilter
-                    ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800'
-                    : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
+                    ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800"
+                    : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700"
                 }`}
               >
                 <Clock size={16} />
@@ -275,11 +309,11 @@ export default function PDFShowcase({ sessions = [] }: { sessions: PDFSession[] 
                 <button
                   onClick={() => {
                     setFilters({
-                      search: '',
-                      dateFrom: '',
-                      dateTo: '',
-                      timeFrom: '',
-                      timeTo: '',
+                      search: "",
+                      dateFrom: "",
+                      dateTo: "",
+                      timeFrom: "",
+                      timeTo: "",
                       showDateFilter: false,
                       showTimeFilter: false,
                     });
@@ -296,7 +330,7 @@ export default function PDFShowcase({ sessions = [] }: { sessions: PDFSession[] 
               {filters.showDateFilter && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
+                  animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
                   className="flex flex-col sm:flex-row gap-3 pt-3 border-t border-gray-200 dark:border-gray-800"
                 >
@@ -336,7 +370,7 @@ export default function PDFShowcase({ sessions = [] }: { sessions: PDFSession[] 
               {filters.showTimeFilter && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
+                  animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
                   className="flex flex-col sm:flex-row gap-3 pt-3 border-t border-gray-200 dark:border-gray-800"
                 >
@@ -400,7 +434,10 @@ export default function PDFShowcase({ sessions = [] }: { sessions: PDFSession[] 
                   disabled={currentPage === 0}
                   className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
-                  <ChevronLeft size={20} className="text-gray-900 dark:text-white" />
+                  <ChevronLeft
+                    size={20}
+                    className="text-gray-900 dark:text-white"
+                  />
                 </button>
 
                 <div className="flex items-center gap-2">
@@ -409,12 +446,14 @@ export default function PDFShowcase({ sessions = [] }: { sessions: PDFSession[] 
                       key={pageIndex}
                       onClick={() => {
                         setCurrentPage(pageIndex);
-                        scrollContainerRef.current?.scrollIntoView({ behavior: 'smooth' });
+                        scrollContainerRef.current?.scrollIntoView({
+                          behavior: "smooth",
+                        });
                       }}
                       className={`w-10 h-10 rounded-lg font-medium transition-colors ${
                         pageIndex === currentPage
-                          ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
-                          : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700'
+                          ? "bg-gray-900 dark:bg-white text-white dark:text-gray-900"
+                          : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
                       }`}
                     >
                       {pageIndex + 1}
@@ -427,7 +466,10 @@ export default function PDFShowcase({ sessions = [] }: { sessions: PDFSession[] 
                   disabled={currentPage === totalPages - 1}
                   className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
-                  <ChevronRight size={20} className="text-gray-900 dark:text-white" />
+                  <ChevronRight
+                    size={20}
+                    className="text-gray-900 dark:text-white"
+                  />
                 </button>
 
                 <div className="ml-auto text-sm text-gray-600 dark:text-gray-400">
@@ -439,15 +481,18 @@ export default function PDFShowcase({ sessions = [] }: { sessions: PDFSession[] 
         ) : (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <div className="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-4">
-              <FileText size={32} className="text-gray-400 dark:text-gray-500" />
+              <FileText
+                size={32}
+                className="text-gray-400 dark:text-gray-500"
+              />
             </div>
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
               No PDFs Found
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
               {filters.search || isAnyFilterActive
-                ? 'Try adjusting your search or filters'
-                : 'No PDF documents available'}
+                ? "Try adjusting your search or filters"
+                : "No PDF documents available"}
             </p>
           </div>
         )}
@@ -475,20 +520,20 @@ function PDFTile({
 }: PDFTileProps) {
   const actionItems: ActionItem[] = [
     {
-      id: 'view',
-      label: 'View',
+      id: "view",
+      label: "View",
       leadingIcon: <Eye size={16} />,
       onClick: () => onView(session),
     },
     {
-      id: 'download',
-      label: 'Download',
+      id: "download",
+      label: "Download",
       leadingIcon: <Download size={16} />,
       onClick: () => onDownload(session),
     },
     {
-      id: 'share',
-      label: 'Share',
+      id: "share",
+      label: "Share",
       leadingIcon: <Share2 size={16} />,
       onClick: () => onShare(session),
     },
@@ -496,13 +541,13 @@ function PDFTile({
 
   const formatDate = (dateStr: string) => {
     try {
-      return new Date(dateStr).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
+      return new Date(dateStr).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
       });
     } catch {
-      return '';
+      return "";
     }
   };
 
@@ -516,12 +561,17 @@ function PDFTile({
     >
       <div className="relative h-40 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 dark:from-blue-500/20 dark:to-purple-500/20" />
-        <FileText size={48} className="text-gray-400 dark:text-gray-500 relative z-10" />
+        <FileText
+          size={48}
+          className="text-gray-400 dark:text-gray-500 relative z-10"
+        />
 
         <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
           <ActionMenu
             items={actionItems}
-            trigger={<IconTrigger size="md" icon={<MoreVertical size={16} />} />}
+            trigger={
+              <IconTrigger size="md" icon={<MoreVertical size={16} />} />
+            }
             size="md"
             align="top-right"
           />
@@ -529,7 +579,10 @@ function PDFTile({
       </div>
 
       <div className="p-4">
-        <h3 className="font-semibold text-gray-900 dark:text-white truncate text-sm mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors cursor-pointer" onClick={() => onView(session)}>
+        <h3
+          className="font-semibold text-gray-900 dark:text-white truncate text-sm mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors cursor-pointer"
+          onClick={() => onView(session)}
+        >
           {session.title}
         </h3>
 

@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../lib/hooks";
 import {
     fetchMe,

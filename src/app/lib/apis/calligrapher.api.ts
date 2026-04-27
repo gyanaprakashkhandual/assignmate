@@ -1,4 +1,3 @@
-// services/calligraphr.api.ts
 import { IUploadHandwritingResponse, IFontUploadResponse } from "../types/caliligrapher.types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
@@ -65,9 +64,9 @@ export async function uploadFontFile(
     formData.append("font", file);
 
     const res = await fetch(`${BASE_URL}/handwriting/upload-font`, {
-        method:  "POST",
+        method: "POST",
         headers: getAuthHeaders(),
-        body:    formData,
+        body: formData,
     });
 
     if (!res.ok) {

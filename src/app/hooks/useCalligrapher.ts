@@ -20,7 +20,7 @@ import {
 
 export function useCalligraphr() {
     const dispatch = useDispatch();
-    const state    = useSelector((s: RootState) => s.calligrapher);
+    const state = useSelector((s: RootState) => s.calligrapher);
     const [uploadProgress, setUploadProgress] = useState(0);
 
     // ── Step 1: open Calligraphr template ────────────────────────────────────
@@ -58,7 +58,7 @@ export function useCalligraphr() {
 
             dispatch(
                 setFontResult({
-                    fontUrl:  result.data.fontUrl,
+                    fontUrl: result.data.fontUrl,
                     publicId: result.data.publicId,
                 })
             );
@@ -79,7 +79,7 @@ export function useCalligraphr() {
                 const result = await uploadFontFile(file);
                 dispatch(
                     setFontResult({
-                        fontUrl:  result.data.fontUrl,
+                        fontUrl: result.data.fontUrl,
                         publicId: result.data.publicId,
                     })
                 );
@@ -94,8 +94,8 @@ export function useCalligraphr() {
         [dispatch]
     );
 
-    const handleReset  = useCallback(() => dispatch(resetCalligraphr()), [dispatch]);
-    const goToStep     = useCallback((s: 1 | 2 | 3) => dispatch(setStep(s)), [dispatch]);
+    const handleReset = useCallback(() => dispatch(resetCalligraphr()), [dispatch]);
+    const goToStep = useCallback((s: 1 | 2 | 3) => dispatch(setStep(s)), [dispatch]);
 
     return {
         ...state,

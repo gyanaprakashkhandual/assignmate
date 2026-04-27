@@ -81,9 +81,7 @@ function AiBubble({ message }: { message: IMessageResponse }) {
       className="flex justify-start px-4 py-1.5 md:px-6"
     >
       <div className="flex max-w-[82%] items-start gap-2.5">
-        
-          <BrandIcon className="h-8 w-8text-black dark:text-white/50" />
-   
+        <BrandIcon className="h-8 w-8text-black dark:text-white/50" />
 
         <div className="min-w-0">
           <div className="rounded-2xl rounded-bl-sm bg-white px-4 py-3 dark:bg-zinc-800">

@@ -25,7 +25,6 @@ const api: AxiosInstance = axios.create({
 
 api.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
-        // ✅ _store accessed at request time, not at module init
         const token = _store?.getState()?.auth?.token;
 
         if (token && config.headers) {
@@ -51,8 +50,6 @@ api.interceptors.response.use(
                     window.location.href = "/auth";
                 }
             }
-            // ❌ REMOVE the else block entirely — don't dispatch clearUser() here
-            // fetchMe's own .rejected handler already sets isChecked: true
         }
 
         const message =

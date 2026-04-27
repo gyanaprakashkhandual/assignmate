@@ -7,7 +7,6 @@ import { ThemeProvider } from "@/app/context/Theme.context";
 import { ActionMenuProvider } from "@/ui/navigations/action/Action.menu.context";
 import { SkeletonProvider } from "@/ui/feedback/skeleton/Skeleton.context";
 import { ConfirmProvider } from "@/ui/overlay/confirm/Confirm.context";
-import { DateTimeProvider } from "@/ui/inputs/time/Time.context";
 import { AlertProvider } from "@/ui/feedback/alert/Alert.context";
 import { SnackbarProvider } from "@/ui/feedback/snackbar/Snackbar.context";
 
@@ -22,29 +21,27 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <Provider store={store}>
       <SnackbarProvider>
         <AlertProvider>
-          <DateTimeProvider>
-            <ConfirmProvider>
-              <SkeletonProvider>
-                <ActionMenuProvider>
-                  <SidebarProvider>
-                    <ButtonProvider>
-                      <InputProvider>
-                        <OnboardProvider>
-                          <AuthProvider>
-                            <ThemeProvider>
-                              <AuthenticatedLayout>
-                                {children}
-                              </AuthenticatedLayout>
-                            </ThemeProvider>
-                          </AuthProvider>
-                        </OnboardProvider>
-                      </InputProvider>
-                    </ButtonProvider>
-                  </SidebarProvider>
-                </ActionMenuProvider>
-              </SkeletonProvider>
-            </ConfirmProvider>
-          </DateTimeProvider>
+          <ConfirmProvider>
+            <SkeletonProvider>
+              <ActionMenuProvider>
+                <SidebarProvider>
+                  <ButtonProvider>
+                    <InputProvider>
+                      <OnboardProvider>
+                        <AuthProvider>
+                          <ThemeProvider>
+                            <AuthenticatedLayout>
+                              {children}
+                            </AuthenticatedLayout>
+                          </ThemeProvider>
+                        </AuthProvider>
+                      </OnboardProvider>
+                    </InputProvider>
+                  </ButtonProvider>
+                </SidebarProvider>
+              </ActionMenuProvider>
+            </SkeletonProvider>
+          </ConfirmProvider>
         </AlertProvider>
       </SnackbarProvider>
     </Provider>
