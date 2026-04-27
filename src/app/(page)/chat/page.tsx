@@ -1,14 +1,14 @@
 import ChatPage from "@/app/modules/chat/pages/Chat.page";
 
 export const metadata = {
-  title: "Chats",
+  title: "Ask for assignment",
   description: "Chat page",
 };
 
 export default function page() {
   return (
     <div>
-      <ChatPage/>
+      <ChatPage params={Promise.resolve({ sessionId: "" })} />
     </div>
   );
 }

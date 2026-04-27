@@ -1,7 +1,7 @@
 import OnboardingPage from "@/app/modules/onboard/pages/Onboarding.page";
 
 export const metadata = {
-  title: "onboarding",
+  title: "Onboarding",
   description: "Onboarding page",
 };
 export default function Page() {
