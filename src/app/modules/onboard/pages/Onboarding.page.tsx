@@ -9,10 +9,10 @@ import { PenLine, ArrowRight, Loader2 } from "lucide-react";
 import { useProfile } from "@/app/hooks/useProfile.hooks";
 import { useOnboard } from "@/app/context/Onboard.context";
 import { useAlert } from "@/ui/feedback/alert/Alert.context";
-import StepUsername from "../Step.user.name";
-import StepDetails from "../Step.details";
-import StepDone from "../Step.done";
-import OnboardProgress from "../Onboard.progress";
+import StepUsername from "../components/Step.user.name";
+import StepDetails from "../components/Step.details";
+import StepDone from "../components/Step.done";
+import OnboardProgress from "../components/Onboard.progress";
 
 const TOTAL_STEPS = 3;
 

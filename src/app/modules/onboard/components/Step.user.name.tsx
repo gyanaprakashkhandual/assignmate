@@ -28,18 +28,24 @@ export default function StepUsername({ value, onChange, error }: Props) {
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium text-black dark:text-white">Username</label>
+        <label className="text-sm font-medium text-black dark:text-white">
+          Username
+        </label>
         <div className="relative">
           <AtSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500" />
           <input
             type="text"
             value={value}
-            onChange={(e) => onChange(e.target.value.toLowerCase().replace(/\s/g, ""))}
+            onChange={(e) =>
+              onChange(e.target.value.toLowerCase().replace(/\s/g, ""))
+            }
             placeholder="yourname"
             className="w-full pl-10 pr-4 py-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-black dark:text-white placeholder-zinc-400 dark:placeholder-zinc-600 text-sm focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent transition"
           />
         </div>
-        {error && <p className="text-xs text-red-500 dark:text-red-400">{error}</p>}
+        {error && (
+          <p className="text-xs text-red-500 dark:text-red-400">{error}</p>
+        )}
         <p className="text-xs text-zinc-400 dark:text-zinc-500">
           Only lowercase letters, numbers, and underscores.
         </p>

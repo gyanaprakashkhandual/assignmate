@@ -111,13 +111,16 @@ export function HistoryHeader({
       </div>
 
       <div className="flex items-center gap-2">
-        <Tooltip content={isAllSelected ? "Deselect all" : "Select all"} showArrow>
-        <div
-          className="shrink-0 flex items-center justify-center w-8 h-9 cursor-pointer"
-          onClick={onToggleAll}
+        <Tooltip
+          content={isAllSelected ? "Deselect all" : "Select all"}
+          showArrow
         >
           <div
-            className={`w-4 h-4 rounded border-[1.5px] flex items-center justify-center transition-all duration-150
+            className="shrink-0 flex items-center justify-center w-8 h-9 cursor-pointer"
+            onClick={onToggleAll}
+          >
+            <div
+              className={`w-4 h-4 rounded border-[1.5px] flex items-center justify-center transition-all duration-150
                             ${
                               isAllSelected
                                 ? "bg-gray-900 dark:bg-white border-gray-900 dark:border-white"
@@ -126,30 +129,30 @@ export function HistoryHeader({
                                   : "border-gray-300 dark:border-gray-700 hover:border-gray-500 dark:hover:border-gray-500"
                             }
                         `}
-          >
-            {isAllSelected && (
-              <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
-                <path
-                  d="M1.5 4.5L3.5 6.5L7.5 2.5"
-                  stroke="white"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            )}
-            {isIndeterminate && !isAllSelected && (
-              <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
-                <path
-                  d="M2 4.5H7"
-                  stroke="white"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                />
-              </svg>
-            )}
+            >
+              {isAllSelected && (
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+                  <path
+                    d="M1.5 4.5L3.5 6.5L7.5 2.5"
+                    stroke="white"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
+              {isIndeterminate && !isAllSelected && (
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+                  <path
+                    d="M2 4.5H7"
+                    stroke="white"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              )}
+            </div>
           </div>
-        </div>
         </Tooltip>
 
         <HistorySearchBar
