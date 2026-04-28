@@ -15,6 +15,7 @@ import {
 import { HistorySearchBar } from "../utils/History.search.bar";
 import { HistoryFilterMenu } from "../utils/History.filter.menu";
 import { HistoryFilterState, BulkAction } from "../types/index";
+import { Tooltip } from "@/ui/data/tooltip/Tooltip.ui";
 
 interface HistoryHeaderProps {
   searchQuery: string;
@@ -95,7 +96,7 @@ export function HistoryHeader({
                 size="sm"
                 label=""
                 leadingIcon={<MoreHorizontal size={15} />}
-                variant="default"
+                variant="ghost"
               />
             }
           />
@@ -110,10 +111,10 @@ export function HistoryHeader({
       </div>
 
       <div className="flex items-center gap-2">
+        <Tooltip content={isAllSelected ? "Deselect all" : "Select all"} showArrow>
         <div
           className="shrink-0 flex items-center justify-center w-8 h-9 cursor-pointer"
           onClick={onToggleAll}
-          title={isAllSelected ? "Deselect all" : "Select all"}
         >
           <div
             className={`w-4 h-4 rounded border-[1.5px] flex items-center justify-center transition-all duration-150
@@ -149,6 +150,7 @@ export function HistoryHeader({
             )}
           </div>
         </div>
+        </Tooltip>
 
         <HistorySearchBar
           value={searchQuery}
