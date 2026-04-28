@@ -1,0 +1,47 @@
+================================================================================
+                        PROPRIETARY LICENSE AGREEMENT
+                      ASSIGNMATE — FRONTEND REPOSITORY
+================================================================================
+
+Copyright (c) 2026 Assignmate. All Rights Reserved.
+
+All contents of this repository — including source code, components, styles,
+assets, configuration, and documentation — are the exclusive intellectual
+property of Assignmate and its owner(s).
+
+================================================================================
+RESTRICTIONS
+================================================================================
+
+Unless express prior written permission has been granted by the owner, the
+following are STRICTLY PROHIBITED:
+
+  - Accessing, copying, cloning, or forking this repository
+  - Modifying, adapting, or creating derivative works from any part of the code
+  - Distributing, sublicensing, or selling any portion of the codebase
+  - Using any part of this code to build a competing product or service
+  - Disclosing any proprietary implementation details to any third party
+
+================================================================================
+AUTHORIZED ACCESS
+================================================================================
+
+Access is granted only to individuals with explicit written authorization from
+the owner. Such access is personal, non-transferable, and revocable at any time.
+
+================================================================================
+ENFORCEMENT
+================================================================================
+
+Violations of this license constitute intellectual property infringement and
+grounds for civil and/or criminal legal action. The owner reserves the right
+to pursue all available legal remedies against any violating party.
+
+================================================================================
+
+                           ALL RIGHTS RESERVED.
+                UNAUTHORIZED USE IS A VIOLATION OF THIS LICENSE.
+
+                © 2025 Assignmate. Proprietary and Confidential.
+
+================================================================================
