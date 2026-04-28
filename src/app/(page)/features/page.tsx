@@ -1,12 +1,13 @@
-import Featurespage from '@/app/pages/app/features/Feature.page'
-import React from 'react'
+import FeaturesPage from "@/app/pages/app/features/Feature.page";
 
-function page() {
+export const metadata = {
+  title: "Features - Assignmate",
+  description: "Features page",
+};
+export default function Page() {
   return (
     <div>
-        <Featurespage/>
+      <FeaturesPage />
     </div>
-  )
+  );
 }
-
-export default page

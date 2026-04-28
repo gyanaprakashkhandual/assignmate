@@ -6,7 +6,9 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <div>
-    <PdfLibraryPage/>
-  </div>;
+  return (
+    <div>
+      <PdfLibraryPage />
+    </div>
+  );
 }
