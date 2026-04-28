@@ -8,7 +8,7 @@ import { PenLine, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { useCalligraphr } from "@/app/hooks/useCalligrapher";
-import { setUploadedFile } from "@/app/lib/features/calligrapher/calligrapher.slice";
+import { setUploadedFileUrl } from "@/app/lib/features/calligrapher/calligrapher.slice";
 import StepIndicator from "../components/Step.indicator";
 import Step1Download from "../steps/Download";
 import Step2Upload from "../steps/Upload";
@@ -52,7 +52,7 @@ export default function CalligraphrPage() {
   const direction = 1;
 
   const handleClearFile = () => {
-    dispatch(setUploadedFile({ file: null as any, url: "" }));
+    dispatch(setUploadedFileUrl({ file: null as any, url: "" }));
   };
 
   return (

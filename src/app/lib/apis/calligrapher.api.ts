@@ -1,15 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import api from "../api";
 import { IUploadHandwritingResponse, IFontUploadResponse } from "../types/caliligrapher.types";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
-
-function getAuthHeaders(): HeadersInit {
-    const token = typeof window !== "undefined"
-        ? localStorage.getItem("token")
-        : null;
-    return {
-        Authorization: token ? `Bearer ${token}` : "",
-    };
-}
+const HANDWRITING_BASE = "/handwriting";
 
 /*** Download the Calligraphr template PDF/PNG */
 export async function downloadTemplate(): Promise<void> {
@@ -22,38 +15,28 @@ export async function uploadHandwritingSheet(
     file: File,
     onProgress?: (pct: number) => void
 ): Promise<IUploadHandwritingResponse> {
-    return new Promise((resolve, reject) => {
-        const formData = new FormData();
-        formData.append("handwritingSheet", file);
+    const formData = new FormData();
+    formData.append("handwritingSheet", file);
 
-        const xhr = new XMLHttpRequest();
-
-        xhr.upload.onprogress = (e) => {
-            if (e.lengthComputable && onProgress) {
-                onProgress(Math.round((e.loaded / e.total) * 100));
-            }
-        };
-
-        xhr.onload = () => {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                resolve(JSON.parse(xhr.responseText));
-            } else {
-                try {
-                    const err = JSON.parse(xhr.responseText);
-                    reject(new Error(err.message || "Upload failed"));
-                } catch {
-                    reject(new Error("Upload failed"));
+    const response = await api.post<{ success: boolean; data: IUploadHandwritingResponse }>(
+        `${HANDWRITING_BASE}/upload-sheet`,
+        formData,
+        {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+            onUploadProgress: (progressEvent) => {
+                if (progressEvent.lengthComputable && onProgress) {
+                    const percentComplete = Math.round(
+                        (progressEvent.loaded / progressEvent.total) * 100
+                    );
+                    onProgress(percentComplete);
                 }
-            }
-        };
+            },
+        }
+    );
 
-        xhr.onerror = () => reject(new Error("Network error during upload"));
-
-        xhr.open("POST", `${BASE_URL}/handwriting/upload-sheet`);
-        const headers = getAuthHeaders();
-        Object.entries(headers).forEach(([k, v]) => xhr.setRequestHeader(k, v as string));
-        xhr.send(formData);
-    });
+    return response.data.data;
 }
 
 /*** Upload a TTF font file directly */
@@ -63,25 +46,23 @@ export async function uploadFontFile(
     const formData = new FormData();
     formData.append("font", file);
 
-    const res = await fetch(`${BASE_URL}/handwriting/upload-font`, {
-        method: "POST",
-        headers: getAuthHeaders(),
-        body: formData,
-    });
+    const response = await api.post<{ success: boolean; data: IFontUploadResponse }>(
+        `${HANDWRITING_BASE}/upload-font`,
+        formData,
+        {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        }
+    );
 
-    if (!res.ok) {
-        const err = await res.json().catch(() => ({ message: "Font upload failed" }));
-        throw new Error(err.message || "Font upload failed");
-    }
-
-    return res.json();
+    return response.data.data;
 }
 
 /*** Get the current user's handwriting profile */
-export async function getHandwritingProfile() {
-    const res = await fetch(`${BASE_URL}/handwriting/profile`, {
-        headers: getAuthHeaders(),
-    });
-    if (!res.ok) throw new Error("Failed to fetch profile");
-    return res.json();
+export async function getHandwritingProfile(): Promise<any> {
+    const response = await api.get<{ success: boolean; data: any }>(
+        `${HANDWRITING_BASE}/profile`
+    );
+    return response.data.data;
 }

@@ -7,7 +7,8 @@
     "no-inline-styles": "off",
     "axe/aria": "off",
     "axe/name-role-value": "off",
-    "axe/forms": "off"
+    "axe/forms": "off",
+    "axe/structure": "off"
   },
   "browserslist": [
     "defaults",

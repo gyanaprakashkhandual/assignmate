@@ -1,12 +1,13 @@
 // hooks/useCalligraphr.ts
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/lib/store";
 import {
     setStep,
-    setUploadedFile,
+    setUploadedFileUrl,
+    clearUploadedFile,
     setUploading,
     setFontResult,
     setError,
@@ -20,29 +21,41 @@ import {
 
 export function useCalligraphr() {
     const dispatch = useDispatch();
-    const state = useSelector((s: RootState) => s.calligrapher);
+    const state    = useSelector((s: RootState) => s.calligrapher);
+
+    // File object lives in a ref — never goes into Redux
+    const fileRef = useRef<File | null>(null);
+
     const [uploadProgress, setUploadProgress] = useState(0);
 
     // ── Step 1: open Calligraphr template ────────────────────────────────────
     const handleDownloadTemplate = useCallback(() => {
         downloadTemplate();
-        // Auto advance after short delay so user sees the action
         setTimeout(() => dispatch(setStep(2)), 800);
     }, [dispatch]);
 
     // ── Step 2a: user selects their filled handwriting image ─────────────────
     const handleFileSelect = useCallback(
         (file: File) => {
-            const url = URL.createObjectURL(file);
-            dispatch(setUploadedFile({ file, url }));
+            // Store File in ref (not Redux)
+            fileRef.current = file;
+            // Store only the preview URL string in Redux
+            const previewUrl = URL.createObjectURL(file);
+            dispatch(setUploadedFileUrl(previewUrl));
             dispatch(setError(""));
         },
         [dispatch]
     );
 
+    // ── Clear selected file ───────────────────────────────────────────────────
+    const handleClearFile = useCallback(() => {
+        fileRef.current = null;
+        dispatch(clearUploadedFile());
+    }, [dispatch]);
+
     // ── Step 2b: upload the filled sheet ─────────────────────────────────────
     const handleSheetUpload = useCallback(async () => {
-        if (!state.uploadedFile) {
+        if (!fileRef.current) {
             dispatch(setError("Please select your filled handwriting sheet first."));
             return;
         }
@@ -52,14 +65,14 @@ export function useCalligraphr() {
 
         try {
             const result = await uploadHandwritingSheet(
-                state.uploadedFile,
+                fileRef.current,
                 (pct) => setUploadProgress(pct)
             );
 
             dispatch(
                 setFontResult({
-                    fontUrl: result.data.fontUrl,
-                    publicId: result.data.publicId,
+                    fontUrl:  result.fontUrl,
+                    publicId: result.publicId,
                 })
             );
         } catch (err) {
@@ -69,18 +82,19 @@ export function useCalligraphr() {
                 )
             );
         }
-    }, [dispatch, state.uploadedFile]);
+    }, [dispatch]);
 
-    // ── Alternative: user uploads TTF directly from Calligraphr ─────────────
+    // ── Alternative: user uploads TTF directly ───────────────────────────────
     const handleFontUpload = useCallback(
         async (file: File) => {
+            // TTF File also stays out of Redux
             dispatch(setUploading(true));
             try {
                 const result = await uploadFontFile(file);
                 dispatch(
                     setFontResult({
-                        fontUrl: result.data.fontUrl,
-                        publicId: result.data.publicId,
+                        fontUrl:  result.fontUrl,
+                        publicId: result.publicId,
                     })
                 );
             } catch (err) {
@@ -94,8 +108,15 @@ export function useCalligraphr() {
         [dispatch]
     );
 
-    const handleReset = useCallback(() => dispatch(resetCalligraphr()), [dispatch]);
-    const goToStep = useCallback((s: 1 | 2 | 3) => dispatch(setStep(s)), [dispatch]);
+    const handleReset = useCallback(() => {
+        fileRef.current = null;
+        dispatch(resetCalligraphr());
+    }, [dispatch]);
+
+    const goToStep = useCallback(
+        (s: 1 | 2 | 3) => dispatch(setStep(s)),
+        [dispatch]
+    );
 
     return {
         ...state,
@@ -104,6 +125,7 @@ export function useCalligraphr() {
         handleFileSelect,
         handleSheetUpload,
         handleFontUpload,
+        handleClearFile,
         handleReset,
         goToStep,
     };
