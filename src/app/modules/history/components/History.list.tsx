@@ -2,9 +2,9 @@
 import { useRef, useEffect, useCallback } from "react";
 import { AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
-import { IChatSessionResponse } from "@/lib/types/chat.types";
-import { HistorySessionCard } from "./HistorySessionCard";
-import { HistoryEmptyState } from "./HistoryEmptyState";
+import { IChatSessionResponse } from "@/app/lib/types/chat.types";
+import { HistorySessionCard } from "./Session.card";
+import { HistoryEmptyState } from "../states/History.empty.state";
 
 interface HistoryListProps {
     sessions: IChatSessionResponse[];

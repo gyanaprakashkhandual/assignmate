@@ -1,3 +1,5 @@
+import ChatHistoryPage from "@/app/modules/history/pages/Chat.history.page"
+
 export const metadata = {
   title: "Chat History",
   description: "Chat history page"
@@ -6,7 +8,7 @@ export const metadata = {
 export default function Page () {
   return (
     <div>
-      page
+      <ChatHistoryPage/>
     </div>
   )
 }
