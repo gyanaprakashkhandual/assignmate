@@ -165,7 +165,7 @@ export default function ChatHistoryPage() {
     [router],
   );
 
-  const handleNewChat = useCallback(() => router.push("/chat/new"), [router]);
+  const handleNewChat = useCallback(() => router.push("/chat"), [router]);
 
   const handleStar = useCallback(
     (sessionId: string) => {

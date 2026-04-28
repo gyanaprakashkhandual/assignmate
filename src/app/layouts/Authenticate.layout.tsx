@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import { Loader2 } from "lucide-react";
 import Sidebar from "../components/core/Sidebar";
 import { useAuth } from "../context/Auth.context";
 import { usePathname } from "next/navigation";
 import { useOnboard } from "../context/Onboard.context";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import LoadingScreen from "../components/utils/Loading.screen";
 
 export default function AuthenticatedLayout({
   children,
@@ -38,11 +38,7 @@ export default function AuthenticatedLayout({
   }
 
   if (!isChecked || isChecking) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-gray-900 dark:text-white animate-spin" />
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   if (!isAuthenticated) {

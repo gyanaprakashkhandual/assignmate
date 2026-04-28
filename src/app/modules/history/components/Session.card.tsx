@@ -16,7 +16,6 @@ import {
   type ActionItem,
 } from "@/ui/navigations/action/Action.menu.ui";
 import { IChatSessionResponse } from "@/app/lib/types/chat.types";
-import { Tooltip } from "@/ui/data/tooltip/Tooltip.ui";
 
 interface HistorySessionCardProps {
   session: IChatSessionResponse;
@@ -217,25 +216,24 @@ export function HistorySessionCard({
           </div>
         </div>
       </div>
-      <Tooltip content="Actions" position="top" showArrow>
-        <div
-          className="shrink-0 transition-opacity"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <ActionMenu
-            items={menuItems}
-            align="bottom-right"
-            size="sm"
-            trigger={
-              <IconTrigger
-                size="sm"
-                icon={<MoreHorizontal size={14} />}
-                variant="ghost"
-              />
-            }
-          />
-        </div>
-      </Tooltip>
+
+      <div
+        className="shrink-0 transition-opacity"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <ActionMenu
+          items={menuItems}
+          align="bottom-right"
+          size="sm"
+          trigger={
+            <IconTrigger
+              size="sm"
+              icon={<MoreHorizontal size={14} />}
+              variant="ghost"
+            />
+          }
+        />
+      </div>
     </motion.div>
   );
 }
