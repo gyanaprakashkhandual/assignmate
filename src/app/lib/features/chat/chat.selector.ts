@@ -99,3 +99,22 @@ export const selectMessageById = (messageId: string) =>
 
 export const selectSessionById = (sessionId: string) =>
     createSelector(selectSessions, (sessions) => sessions.find((s) => s.id === sessionId) ?? null);
+
+export const selectPdfs = createSelector(selectChatState, (chat) => chat.pdfs);
+
+export const selectPdfsPagination = createSelector(selectChatState, (chat) => chat.pdfsPagination);
+
+export const selectIsBulkLoading = createSelector(selectChatState, (chat) => chat.isBulkLoading);
+
+export const selectIsFetchingPdfs = createSelector(selectChatState, (chat) => chat.isFetchingPdfs);
+
+export const selectArchivedSessions = createSelector(selectSessions, (sessions) =>
+    sessions.filter((s) => s.status === "archived")
+);
+
+export const selectDeletedSessions = createSelector(selectSessions, (sessions) =>
+    sessions.filter((s) => s.status === "deleted")
+);
+
+export const selectPdfById = (pdfId: string) =>
+    createSelector(selectPdfs, (pdfs) => pdfs.find((p) => p.id === pdfId) ?? null);

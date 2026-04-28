@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { chatApi } from "../../apis/chat.api";
 import {
@@ -24,6 +25,10 @@ const initialState: ChatState = {
     isRenderingPreview: false,
     isExportingPdf: false,
     error: null,
+    pdfs: [] as import("../../types/chat.types").IPdfRecord[],
+    pdfsPagination: null as import("../../types/chat.types").IPagination | null,
+    isBulkLoading: false,
+    isFetchingPdfs: false,
 };
 
 export const createSession = createAsyncThunk(
@@ -120,6 +125,72 @@ export const exportPdf = createAsyncThunk(
     async (payload: IExportPdfPayload, { rejectWithValue }) => {
         try {
             return await chatApi.exportPdf(payload);
+        } catch (error) {
+            return rejectWithValue((error as Error).message);
+        }
+    }
+);
+
+export const softDeleteAll = createAsyncThunk(
+    "chat/softDeleteAll",
+    async (payload: import("../../types/chat.types").IBulkDeletePayload, { rejectWithValue }) => {
+        try {
+            return await chatApi.softDeleteAll(payload);
+        } catch (error) {
+            return rejectWithValue((error as Error).message);
+        }
+    }
+);
+
+export const permanentDeleteAll = createAsyncThunk(
+    "chat/permanentDeleteAll",
+    async (payload: import("../../types/chat.types").IBulkDeletePayload, { rejectWithValue }) => {
+        try {
+            return await chatApi.permanentDeleteAll(payload);
+        } catch (error) {
+            return rejectWithValue((error as Error).message);
+        }
+    }
+);
+
+export const archiveAll = createAsyncThunk(
+    "chat/archiveAll",
+    async (payload: import("../../types/chat.types").IBulkArchivePayload, { rejectWithValue }) => {
+        try {
+            return await chatApi.archiveAll(payload);
+        } catch (error) {
+            return rejectWithValue((error as Error).message);
+        }
+    }
+);
+
+export const filterSessions = createAsyncThunk(
+    "chat/filterSessions",
+    async (params: import("../../types/chat.types").IFilterSessionsPayload | undefined, { rejectWithValue }) => {
+        try {
+            return await chatApi.filterSessions(params);
+        } catch (error) {
+            return rejectWithValue((error as Error).message);
+        }
+    }
+);
+
+export const searchSessionsThunk = createAsyncThunk(
+    "chat/searchSessions",
+    async ({ q, page, limit }: { q: string; page?: number; limit?: number }, { rejectWithValue }) => {
+        try {
+            return await chatApi.searchSessions(q, page, limit);
+        } catch (error) {
+            return rejectWithValue((error as Error).message);
+        }
+    }
+);
+
+export const fetchUserPdfs = createAsyncThunk(
+    "chat/fetchUserPdfs",
+    async (params: import("../../types/chat.types").IGetUserPdfsPayload | undefined, { rejectWithValue }) => {
+        try {
+            return await chatApi.getUserPdfs(params);
         } catch (error) {
             return rejectWithValue((error as Error).message);
         }
@@ -285,6 +356,88 @@ const chatSlice = createSlice({
             })
             .addCase(exportPdf.rejected, (state, action) => {
                 state.isExportingPdf = false;
+                state.error = action.payload as string;
+            })
+            .addCase(softDeleteAll.pending, (state) => {
+                state.isBulkLoading = true;
+                state.error = null;
+            })
+            .addCase(softDeleteAll.fulfilled, (state, action) => {
+                state.isBulkLoading = false;
+                state.sessions = state.sessions.filter((s) => s.status !== "deleted");
+            })
+            .addCase(softDeleteAll.rejected, (state, action) => {
+                state.isBulkLoading = false;
+                state.error = action.payload as string;
+            })
+
+            .addCase(permanentDeleteAll.pending, (state) => {
+                state.isBulkLoading = true;
+                state.error = null;
+            })
+            .addCase(permanentDeleteAll.fulfilled, (state) => {
+                state.isBulkLoading = false;
+                state.sessions = [];
+                state.currentSession = null;
+                state.messages = [];
+            })
+            .addCase(permanentDeleteAll.rejected, (state, action) => {
+                state.isBulkLoading = false;
+                state.error = action.payload as string;
+            })
+
+            .addCase(archiveAll.pending, (state) => {
+                state.isBulkLoading = true;
+                state.error = null;
+            })
+            .addCase(archiveAll.fulfilled, (state) => {
+                state.isBulkLoading = false;
+                state.sessions = state.sessions.map((s) => ({ ...s, status: "archived" as const }));
+            })
+            .addCase(archiveAll.rejected, (state, action) => {
+                state.isBulkLoading = false;
+                state.error = action.payload as string;
+            })
+
+            .addCase(filterSessions.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(filterSessions.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.sessions = action.payload.sessions;
+                state.pagination = action.payload.pagination;
+            })
+            .addCase(filterSessions.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload as string;
+            })
+
+            .addCase(searchSessionsThunk.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(searchSessionsThunk.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.sessions = action.payload.sessions;
+                state.pagination = action.payload.pagination;
+            })
+            .addCase(searchSessionsThunk.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload as string;
+            })
+
+            .addCase(fetchUserPdfs.pending, (state) => {
+                state.isFetchingPdfs = true;
+                state.error = null;
+            })
+            .addCase(fetchUserPdfs.fulfilled, (state, action) => {
+                state.isFetchingPdfs = false;
+                state.pdfs = action.payload.pdfs;
+                state.pdfsPagination = action.payload.pagination;
+            })
+            .addCase(fetchUserPdfs.rejected, (state, action) => {
+                state.isFetchingPdfs = false;
                 state.error = action.payload as string;
             });
     },

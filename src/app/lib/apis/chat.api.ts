@@ -14,6 +14,14 @@ import {
     IUpdateSessionPayload,
     IDeleteSessionPayload,
     ISearchSessionsPayload,
+    IBulkDeletePayload,
+    IBulkArchivePayload,
+    IFilterSessionsPayload,
+    IGetUserPdfsPayload,
+    IPdfRecord,
+    IPdfListResult,
+    IBulkActionResult,
+    IPagination,
 } from "../types/chat.types";
 
 const CHAT_BASE = "/chat";
@@ -84,5 +92,55 @@ export const chatApi = {
             { customizations, paperStyle }
         );
         return response.data.data;
+    },
+    softDeleteAll: async (payload: IBulkDeletePayload): Promise<IBulkActionResult> => {
+        const response = await api.delete<{ success: boolean; message: string; deleted: number }>(
+            `${CHAT_BASE}/bulk/soft`,
+            { data: payload }
+        );
+        return { deleted: response.data.deleted, message: response.data.message };
+    },
+
+    permanentDeleteAll: async (payload: IBulkDeletePayload): Promise<IBulkActionResult> => {
+        const response = await api.delete<{ success: boolean; message: string; deleted: number }>(
+            `${CHAT_BASE}/bulk/permanent`,
+            { data: payload }
+        );
+        return { deleted: response.data.deleted, message: response.data.message };
+    },
+
+    archiveAll: async (payload: IBulkArchivePayload): Promise<IBulkActionResult> => {
+        const response = await api.patch<{ success: boolean; message: string; archived: number }>(
+            `${CHAT_BASE}/bulk/archive`,
+            payload
+        );
+        return { archived: response.data.archived, message: response.data.message };
+    },
+
+    filterSessions: async (params?: IFilterSessionsPayload): Promise<ISessionListResult> => {
+        const response = await api.get<{
+            success: boolean;
+            data: IChatSessionResponse[];
+            pagination: IPagination;
+        }>(`${CHAT_BASE}/filter`, { params });
+        return { sessions: response.data.data, pagination: response.data.pagination };
+    },
+
+    searchSessions: async (q: string, page?: number, limit?: number): Promise<ISessionListResult> => {
+        const response = await api.get<{
+            success: boolean;
+            data: IChatSessionResponse[];
+            pagination: IPagination;
+        }>(`${CHAT_BASE}/search`, { params: { q, page, limit } });
+        return { sessions: response.data.data, pagination: response.data.pagination };
+    },
+
+    getUserPdfs: async (params?: IGetUserPdfsPayload): Promise<IPdfListResult> => {
+        const response = await api.get<{
+            success: boolean;
+            data: IPdfRecord[];
+            pagination: IPagination;
+        }>(`${CHAT_BASE}/pdfs`, { params });
+        return { pdfs: response.data.data, pagination: response.data.pagination };
     },
 };

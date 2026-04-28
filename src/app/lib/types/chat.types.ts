@@ -147,4 +147,60 @@ export interface ChatState {
     isRenderingPreview: boolean;
     isExportingPdf: boolean;
     error: string | null;
+    pdfs: IPdfRecord[];
+    pdfsPagination: IPagination | null;
+    isBulkLoading: boolean;
+    isFetchingPdfs: boolean;
+}
+
+export interface IBulkDeletePayload {
+    sessionIds?: string[];
+}
+
+export interface IBulkArchivePayload {
+    sessionIds?: string[];
+}
+
+export interface IFilterSessionsPayload {
+    status?: ChatStatus;
+    isStarred?: boolean;
+    from?: string;
+    to?: string;
+    sortBy?: SortBy;
+    sortOrder?: SortOrder;
+    page?: number;
+    limit?: number;
+}
+
+export interface IGetUserPdfsPayload {
+    from?: string;
+    to?: string;
+    exportedBy?: ExportedBy;
+    q?: string;
+    sortOrder?: SortOrder;
+    page?: number;
+    limit?: number;
+}
+
+export interface IPdfRecord {
+    id: string;
+    pdfUrl: string;
+    pdfPublicId: string;
+    fileSize: number;
+    messageCount: number;
+    exportedBy: ExportedBy;
+    generatedAt: string;
+    chatSession: { _id: string; title: string; status: ChatStatus } | null;
+    metadata?: Record<string, unknown>;
+}
+
+export interface IPdfListResult {
+    pdfs: IPdfRecord[];
+    pagination: IPagination;
+}
+
+export interface IBulkActionResult {
+    deleted?: number;
+    archived?: number;
+    message: string;
 }
