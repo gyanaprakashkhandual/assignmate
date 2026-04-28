@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { easeInOut, motion } from "framer-motion";
@@ -133,11 +134,22 @@ export default function Hero() {
               className="flex items-center gap-6 mt-10"
             >
               <div className="flex -space-x-2">
-                {[1, 2, 3, 4].map((i) => (
-                  <div
+                {[
+                  "https://res.cloudinary.com/dvytvjplt/image/upload/v1777276914/inkify/handwriting/b0vm4tnllkv6etargq7b.png",
+                  "https://res.cloudinary.com/dvytvjplt/image/upload/v1776156342/ygwl1zaadm2l7xfnwuga.jpg",
+                  "https://res.cloudinary.com/dvytvjplt/image/upload/v1777276914/inkify/handwriting/b0vm4tnllkv6etargq7b.png",
+                  "https://res.cloudinary.com/dvytvjplt/image/upload/v1776156342/ygwl1zaadm2l7xfnwuga.jpg",
+                ].map((src, i) => (
+                  <motion.div
                     key={i}
-                    className="w-8 h-8 rounded-full border-2 border-white dark:border-zinc-950 bg-linear-to-br from-zinc-200 to-zinc-400 dark:from-zinc-600 dark:to-zinc-800"
-                  />
+                    className="w-8 h-8 rounded-full border-2 border-white dark:border-zinc-950 overflow-hidden"
+                  >
+                    <img
+                      src={src}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </motion.div>
                 ))}
               </div>
               <p className="text-sm text-zinc-500 dark:text-zinc-400">
@@ -212,7 +224,7 @@ export default function Hero() {
             {[
               { number: "2,400+", label: "Active Users" },
               { number: "98.4%", label: "Style Accuracy" },
-              { number: "50k+", label: "PDFs Generated" },
+              { number: "200+", label: "PDFs Generated" },
               { number: "<30s", label: "Generation Time" },
             ].map((stat) => (
               <div key={stat.label} className="text-center">

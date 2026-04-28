@@ -18,11 +18,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d4d4d8;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #a1a1aa;
+  background: #7c7c83;
 }
 
 ::-webkit-scrollbar-track {
@@ -30,10 +26,6 @@ body {
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #3f3f46;
-}
-
-.dark ::-webkit-scrollbar-thumb:hover {
   background: #52525b;
 }
 
@@ -47,4 +39,13 @@ button {
 
 .select-none {
   user-select: none;
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }

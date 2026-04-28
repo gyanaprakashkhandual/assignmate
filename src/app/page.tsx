@@ -2,13 +2,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { PenLine } from "lucide-react";
 import Homepage from "./pages/core/Home.page";
 import LandingPage from "./pages/utils/Landing.page";
 import { useAuth } from "./context/Auth.context";
 import { useOnboard } from "./context/Onboard.context";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import BrandIcon from "./components/icons/Brand.icon";
 
 function LoadingScreen() {
   return (
@@ -32,7 +32,7 @@ function LoadingScreen() {
           />
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-8 h-8 rounded-xl bg-black dark:bg-white flex items-center justify-center">
-              <PenLine className="w-4 h-4 text-white dark:text-black" />
+              <BrandIcon className="w-4 h-4 text-white dark:text-black" />
             </div>
           </div>
         </div>

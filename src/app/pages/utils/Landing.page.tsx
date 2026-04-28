@@ -11,15 +11,17 @@ import Footer from "../home/Footer.home";
 export default function LandingPage() {
   return (
     <main className="min-h-screen bg-white dark:bg-zinc-950">
-      <Navbar />
-      <Hero />
-      <Features />
-      <GettingStarted />
-      <UseCases />
-      <Feedback />
-      <CTA />
-      <Subscribe />
-      <Footer />
+      <body className="hide-scrollbar overflow-auto">
+        <Navbar />
+        <Hero />
+        <Features />
+        <GettingStarted />
+        <UseCases />
+        <Feedback />
+        <CTA />
+        <Subscribe />
+        <Footer />
+      </body>
     </main>
   );
 }
