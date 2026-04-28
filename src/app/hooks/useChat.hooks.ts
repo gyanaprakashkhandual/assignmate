@@ -17,6 +17,12 @@ import {
     clearPreviewResult,
     clearPdfResult,
     resetChat,
+    softDeleteAll,
+    permanentDeleteAll,
+    archiveAll,
+    filterSessions,
+    searchSessionsThunk,
+    fetchUserPdfs,
 } from "../lib/features/chat/chat.slice";
 import {
     selectSessions,
@@ -47,6 +53,12 @@ import {
     selectTotalPages,
     selectCurrentPage,
     selectTotalSessions,
+    selectPdfs,
+    selectPdfsPagination,
+    selectIsBulkLoading,
+    selectIsFetchingPdfs,
+    selectArchivedSessions,
+    selectDeletedSessions,
 } from "../lib/features/chat/chat.selector";
 import {
     ICreateSessionPayload,
@@ -59,6 +71,11 @@ import {
     ChatStatus,
     PaperStyle,
     ICustomizations,
+    IBulkDeletePayload,
+    IBulkArchivePayload,
+    IFilterSessionsPayload,
+    IGetUserPdfsPayload,
+
 } from "../lib/types/chat.types";
 
 export const useChat = (autoFetchSessions = false) => {
@@ -92,6 +109,13 @@ export const useChat = (autoFetchSessions = false) => {
     const totalPages = useAppSelector(selectTotalPages);
     const currentPage = useAppSelector(selectCurrentPage);
     const totalSessions = useAppSelector(selectTotalSessions);
+    const pdfs = useAppSelector(selectPdfs);
+    const pdfsPagination = useAppSelector(selectPdfsPagination);
+    const isBulkLoading = useAppSelector(selectIsBulkLoading);
+    const isFetchingPdfs = useAppSelector(selectIsFetchingPdfs);
+    const archivedSessions = useAppSelector(selectArchivedSessions);
+    const deletedSessions = useAppSelector(selectDeletedSessions);
+
 
     useEffect(() => {
         if (autoFetchSessions) {
@@ -183,6 +207,37 @@ export const useChat = (autoFetchSessions = false) => {
         [dispatch]
     );
 
+    const softDeleteAllSessions = useCallback(
+        (payload: IBulkDeletePayload) => dispatch(softDeleteAll(payload)),
+        [dispatch]
+    );
+
+    const permanentDeleteAllSessions = useCallback(
+        (payload: IBulkDeletePayload) => dispatch(permanentDeleteAll(payload)),
+        [dispatch]
+    );
+
+    const archiveAllSessions = useCallback(
+        (payload: IBulkArchivePayload) => dispatch(archiveAll(payload)),
+        [dispatch]
+    );
+
+    const filter = useCallback(
+        (params?: IFilterSessionsPayload) => dispatch(filterSessions(params)),
+        [dispatch]
+    );
+
+    const search = useCallback(
+        (q: string, page?: number, limit?: number) =>
+            dispatch(searchSessionsThunk({ q, page, limit })),
+        [dispatch]
+    );
+
+    const getPdfs = useCallback(
+        (params?: IGetUserPdfsPayload) => dispatch(fetchUserPdfs(params)),
+        [dispatch]
+    );
+
     const dismissError = useCallback(() => dispatch(clearChatError()), [dispatch]);
 
     const clearSession = useCallback(() => dispatch(clearCurrentSession()), [dispatch]);
@@ -246,5 +301,17 @@ export const useChat = (autoFetchSessions = false) => {
         clearPreview,
         clearPdf,
         reset,
+        pdfs,
+        pdfsPagination,
+        isBulkLoading,
+        isFetchingPdfs,
+        archivedSessions,
+        deletedSessions,
+        softDeleteAllSessions,
+        permanentDeleteAllSessions,
+        archiveAllSessions,
+        filter,
+        search,
+        getPdfs,
     };
 };
