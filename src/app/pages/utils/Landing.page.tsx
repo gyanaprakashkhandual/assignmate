@@ -11,7 +11,6 @@ import Footer from "../home/Footer.home";
 export default function LandingPage() {
   return (
     <main className="min-h-screen bg-white dark:bg-zinc-950">
-      <body className="hide-scrollbar overflow-auto">
         <Navbar />
         <Hero />
         <Features />
@@ -21,7 +20,6 @@ export default function LandingPage() {
         <CTA />
         <Subscribe />
         <Footer />
-      </body>
     </main>
   );
 }
