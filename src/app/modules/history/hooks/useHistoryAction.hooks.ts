@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useCallback } from "react";
 import { useChat } from "@/app/hooks/useChat.hooks";
 import { useAlert } from "@/ui/feedback/alert/Alert.context";

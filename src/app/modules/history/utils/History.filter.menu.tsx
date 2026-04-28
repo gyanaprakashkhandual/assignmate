@@ -44,7 +44,7 @@ export function HistoryFilterMenu({
           filters.status === "all" ? (
             <CheckCircle size={13} />
           ) : (
-            <span className="w-[13px]" />
+            <span className="w-3.25" />
           ),
         onClick: () => updateFilter("status", "all"),
       },
@@ -55,7 +55,7 @@ export function HistoryFilterMenu({
           filters.status === "active" ? (
             <CheckCircle size={13} />
           ) : (
-            <span className="w-[13px]" />
+            <span className="w-3.25" />
           ),
         onClick: () => updateFilter("status", "active"),
       },
@@ -66,7 +66,7 @@ export function HistoryFilterMenu({
           filters.status === "archived" ? (
             <CheckCircle size={13} />
           ) : (
-            <span className="w-[13px]" />
+            <span className="w-3.25" />
           ),
         onClick: () => updateFilter("status", "archived"),
       },
@@ -84,7 +84,7 @@ export function HistoryFilterMenu({
           filters.isStarred === null ? (
             <CheckCircle size={13} />
           ) : (
-            <span className="w-[13px]" />
+            <span className="w-3.25" />
           ),
         onClick: () => updateFilter("isStarred", null),
       },
@@ -152,7 +152,7 @@ export function HistoryFilterMenu({
           filters.sortOrder === "desc" ? (
             <CheckCircle size={13} />
           ) : (
-            <span className="w-[13px]" />
+            <span className="w-3.25" />
           ),
         onClick: () => updateFilter("sortOrder", "desc"),
       },
@@ -163,7 +163,7 @@ export function HistoryFilterMenu({
           filters.sortOrder === "asc" ? (
             <CheckCircle size={13} />
           ) : (
-            <span className="w-[13px]" />
+            <span className="w-3.25" />
           ),
         onClick: () => updateFilter("sortOrder", "asc"),
       },

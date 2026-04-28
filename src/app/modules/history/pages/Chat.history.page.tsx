@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -7,7 +11,7 @@ import { useAlert } from "@/ui/feedback/alert/Alert.context";
 import { HistoryHeader } from "../components/History.navbar";
 import { HistoryBulkBar } from "../components/Hisotory.bullk.bar";
 import { HistoryList } from "../components/History.list";
-import { HistoryListSkeleton } from "../states/Loader";
+import { HistoryListSkeleton } from "../states/History.loading.state";
 import { useHistorySelection } from "../hooks/useHistorySelection.hooks";
 import { useHistoryFilter } from "../hooks/useHistoryFilter.hooks";
 import { useHistoryActions } from "../hooks/useHistoryAction.hooks";

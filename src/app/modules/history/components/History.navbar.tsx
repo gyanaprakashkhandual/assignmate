@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "framer-motion";
+
 import {
   Plus,
   Trash2,
@@ -13,7 +13,7 @@ import {
   type ActionItem,
 } from "@/ui/navigations/action/Action.menu.ui";
 import { HistorySearchBar } from "../utils/History.search.bar";
-import { HistoryFilterMenu } from "../utils/HistoryFilter.menu";
+import { HistoryFilterMenu } from "../utils/History.filter.menu";
 import { HistoryFilterState, BulkAction } from "../types/index";
 
 interface HistoryHeaderProps {
@@ -95,7 +95,7 @@ export function HistoryHeader({
                 size="sm"
                 label=""
                 leadingIcon={<MoreHorizontal size={15} />}
-                variant="ghost"
+                variant="default"
               />
             }
           />
