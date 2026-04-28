@@ -13,7 +13,7 @@ import {
   IconTrigger,
   type ActionItem,
 } from "@/ui/navigations/action/Action.menu.ui";
-import { PdfFilterState } from "../types/index";
+import { PdfFilterState } from "../types/pdf.types";
 
 interface PdfFilterMenuProps {
   filters: PdfFilterState;

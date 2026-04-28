@@ -123,7 +123,7 @@ export function PdfCard({
           </span>
         </div>
 
-        <div className="absolute inset-0 bg-gray-900/0 group-hover:bg-gray-900/[0.02] dark:group-hover:bg-white/[0.02] transition-colors duration-200" />
+        <div className="absolute inset-0 bg-gray-900/0 group-hover:bg-gray-900/2 dark:group-hover:bg-white/2 transition-colors duration-200" />
 
         <div className="absolute top-2.5 right-2.5 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
           <div onClick={(e) => e.stopPropagation()}>
