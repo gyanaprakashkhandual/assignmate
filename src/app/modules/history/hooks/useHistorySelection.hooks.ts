@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { IChatSessionResponse } from "@/lib/types/chat.types";
+import { IChatSessionResponse } from "@/app/lib/types/chat.types";
 
 export function useHistorySelection(sessions: IChatSessionResponse[]) {
     const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
