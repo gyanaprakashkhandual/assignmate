@@ -3,7 +3,7 @@ import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from "ax
 import { clearUser } from "./features/user/user.slice";
 import { clearProfile } from "./features/profile/profile.slice";
 
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = "https://assignmate-40nf.onrender.com/api";
 
 let _store: ReturnType<typeof import("./store").store.getState> extends infer S
     ? { getState: () => S; dispatch: (action: any) => any }

@@ -26,13 +26,13 @@ export async function uploadHandwritingSheet(
                 "Content-Type": "multipart/form-data",
             },
             onUploadProgress: (progressEvent) => {
-                if (progressEvent.lengthComputable && onProgress) {
+                if (onProgress && progressEvent.total) {
                     const percentComplete = Math.round(
                         (progressEvent.loaded / progressEvent.total) * 100
                     );
                     onProgress(percentComplete);
                 }
-            },
+            }
         }
     );
 
