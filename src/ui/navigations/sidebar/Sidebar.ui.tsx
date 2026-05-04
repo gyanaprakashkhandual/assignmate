@@ -88,7 +88,7 @@ const sizeConfig = {
     chevronSize: 13,
     toggleSize: 17,
   },
-};
+} as const;
 
 const variantStyles: Record<SidebarVariant, string> = {
   default:
@@ -335,6 +335,13 @@ export interface SidebarProps {
   onModeChange?: (mode: SidebarState_Mode) => void;
 }
 
+// Fix 1: Omit only the SidebarProviderProps keys that exist on SidebarProps,
+// so the intersection is clean and there are no conflicting property types.
+type SidebarInnerProps = Omit<SidebarProps, keyof SidebarProviderProps> & {
+  size: SidebarSize;
+  variant: SidebarVariant;
+};
+
 function SidebarInner({
   items = [],
   moodWidget,
@@ -356,7 +363,7 @@ function SidebarInner({
   headerClassName = "",
   bodyClassName = "",
   footerClassName = "",
-}: Omit<SidebarProps, keyof SidebarProviderProps>) {
+}: SidebarInnerProps) {
   const {
     state,
     isCollapsed,
@@ -364,9 +371,7 @@ function SidebarInner({
     cycleMode,
     expand,
     setSearch,
-    toggleSearch,
     closeSearch,
-    toggleMobile,
     closeMobile,
     searchInputRef,
   } = useSidebarContext();
@@ -380,7 +385,8 @@ function SidebarInner({
       ? s.collapsedWidth
       : s.expandedWidth;
 
-  const toggleIcon = isHidden ? (
+  // Fix 2: Explicitly type toggleIcon as React.ReactElement to satisfy JSX return type.
+  const toggleIcon: React.ReactElement = isHidden ? (
     <PanelLeftOpen size={s.toggleSize} />
   ) : collapsed ? (
     <PanelLeft size={s.toggleSize} />
@@ -458,6 +464,7 @@ function SidebarInner({
               className="shrink-0 text-gray-400 dark:text-gray-500"
             />
             <input
+              // Fix 3: Cast the ref to the concrete HTMLInputElement ref type expected by <input>.
               ref={searchInputRef as React.RefObject<HTMLInputElement>}
               type="text"
               value={state.searchValue}
@@ -489,6 +496,7 @@ function SidebarInner({
             type="button"
             onClick={() => {
               expand();
+              // Fix 4: searchInputRef.current may be null — optional-chain the focus call.
               setTimeout(() => searchInputRef.current?.focus(), 120);
             }}
             className="flex items-center justify-center w-8 h-8 rounded-lg text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-100"
@@ -508,16 +516,16 @@ function SidebarInner({
       )}
 
       <div
-  className={`flex-1 overflow-y-auto overflow-x-hidden p-2 ${bodyClassName}`}
->
-  <SidebarBody items={items} size={size} collapsed={collapsed} />
-</div>
+        className={`flex-1 overflow-y-auto overflow-x-hidden p-2 ${bodyClassName}`}
+      >
+        <SidebarBody items={items} size={size} collapsed={collapsed} />
+      </div>
 
-{moodWidget && !collapsed && (
-  <div className="border-t border-gray-200 dark:border-gray-800">
-    {moodWidget}
-  </div>
-)}
+      {moodWidget && !collapsed && (
+        <div className="border-t border-gray-200 dark:border-gray-800">
+          {moodWidget}
+        </div>
+      )}
 
       {bottomContent && !collapsed && (
         <div
