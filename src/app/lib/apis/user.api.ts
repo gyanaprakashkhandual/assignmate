@@ -36,11 +36,11 @@ export const userApi = {
     },
 
     initiateGoogleAuth: (): void => {
-        window.location.href = `http://localhost:5000/api${AUTH_BASE}/google`;
+        window.location.href = `https://assignmate-40nf.onrender.com/api${AUTH_BASE}/google`;
     },
 
     initiateGithubAuth: (): void => {
-        window.location.href = `http://localhost:5000/api${AUTH_BASE}/github`;
+        window.location.href = `https://assignmate-40nf.onrender.com/api${AUTH_BASE}/github`;
     },
 
     logout: async (): Promise<void> => {
