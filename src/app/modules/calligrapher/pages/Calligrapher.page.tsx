@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { AnimatePresence, easeInOut, easeOut, motion } from "framer-motion";
@@ -52,7 +51,7 @@ export default function CalligraphrPage() {
   const direction = 1;
 
   const handleClearFile = () => {
-    dispatch(setUploadedFileUrl({ file: null as any, url: "" }));
+    dispatch(setUploadedFileUrl(""));
   };
 
   return (

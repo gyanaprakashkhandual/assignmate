@@ -21,7 +21,7 @@ import {
 
 export function useCalligraphr() {
     const dispatch = useDispatch();
-    const state    = useSelector((s: RootState) => s.calligrapher);
+    const state = useSelector((s: RootState) => s.calligrapher);
 
     // File object lives in a ref — never goes into Redux
     const fileRef = useRef<File | null>(null);
@@ -71,7 +71,7 @@ export function useCalligraphr() {
 
             dispatch(
                 setFontResult({
-                    fontUrl:  result.fontUrl,
+                    fontUrl: result.fontUrl,
                     publicId: result.publicId,
                 })
             );
@@ -93,7 +93,7 @@ export function useCalligraphr() {
                 const result = await uploadFontFile(file);
                 dispatch(
                     setFontResult({
-                        fontUrl:  result.fontUrl,
+                        fontUrl: result.fontUrl,
                         publicId: result.publicId,
                     })
                 );

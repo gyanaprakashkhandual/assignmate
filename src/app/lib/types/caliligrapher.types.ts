@@ -16,6 +16,8 @@ export interface ICalligraphrState {
 }
 
 export interface IUploadHandwritingResponse {
+    fontUrl: string;
+    publicId: string;
     success: boolean;
     data: {
         fontUrl:  string;
@@ -26,6 +28,8 @@ export interface IUploadHandwritingResponse {
 }
 
 export interface IFontUploadResponse {
+    fontUrl: string;
+    publicId: string;
     success: boolean;
     data: {
         fontUrl:  string;

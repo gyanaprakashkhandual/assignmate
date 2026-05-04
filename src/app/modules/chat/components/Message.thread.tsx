@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 "use client";
@@ -114,9 +115,6 @@ function AiBubble({ message }: { message: IMessageResponse }) {
 
             {/* Like */}
             <button
-              onClick={() =>
-                setLiked((prev: string) => (prev === "like" ? null : "like"))
-              }
               title="Like"
               className={`flex h-6 w-6 items-center justify-center rounded-md transition-colors hover:bg-black/5 dark:hover:bg-white/8 ${
                 liked === "like"
@@ -132,11 +130,6 @@ function AiBubble({ message }: { message: IMessageResponse }) {
 
             {/* Dislike */}
             <button
-              onClick={() =>
-                setLiked((prev: string) =>
-                  prev === "dislike" ? null : "dislike",
-                )
-              }
               title="Dislike"
               className={`flex h-6 w-6 items-center justify-center rounded-md transition-colors hover:bg-black/5 dark:hover:bg-white/8 ${
                 liked === "dislike"

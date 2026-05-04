@@ -8,7 +8,6 @@ import { ActionMenuProvider } from "@/ui/navigations/action/Action.menu.context"
 import { SkeletonProvider } from "@/ui/feedback/skeleton/Skeleton.context";
 import { ConfirmProvider } from "@/ui/overlay/confirm/Confirm.context";
 import { AlertProvider } from "@/ui/feedback/alert/Alert.context";
-import { SnackbarProvider } from "@/ui/feedback/snackbar/Snackbar.context";
 
 import { AuthProvider } from "@/app/context/Auth.context";
 import { OnboardProvider } from "@/app/context/Onboard.context";
@@ -19,7 +18,6 @@ import { store } from "../../lib/store";
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <Provider store={store}>
-      <SnackbarProvider>
         <AlertProvider>
           <ConfirmProvider>
             <SkeletonProvider>
@@ -43,7 +41,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
             </SkeletonProvider>
           </ConfirmProvider>
         </AlertProvider>
-      </SnackbarProvider>
     </Provider>
   );
 }
