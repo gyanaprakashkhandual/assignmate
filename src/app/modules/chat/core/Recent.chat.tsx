@@ -137,7 +137,7 @@ function SessionCard({
             <ActionMenu
               items={menuItems}
               size="sm"
-              align="bottom-right"
+              align="auto"
               trigger={
                 <IconTrigger
                   size="sm"
